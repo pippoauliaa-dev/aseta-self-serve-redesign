@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Kenali kebutuhan pengelolaan aset dan maintenance tim Anda dengan simulasi interaktif Aseta.">
+  <meta name="theme-color" content="#173b78">
+  <title>Kenali Kesiapan Pengelolaan Aset Anda | Aseta — Draft</title>
+  <link rel="stylesheet" href="aseta-self-serve.css">
+</head>
+<body>
+  <header class="site-header" id="top">
+    <div class="container nav-wrap">
+      <a class="brand" href="#top" aria-label="Aseta beranda"><img src="assets/aseta-brand-logo.png" alt="Aseta"></a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+      <nav id="main-nav" class="main-nav" aria-label="Navigasi utama">
+        <a href="#product-overview">Tentang Aseta</a><a href="#problem-form">Identifikasi kebutuhan</a><a href="#simulator">Simulasi</a><a href="#faq">FAQ</a>
+        <a class="button button-dark nav-cta" href="#problem-form">Mulai sekarang <span aria-hidden="true">→</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero-inner">
+        <p class="eyebrow">Draft alur self-serve Aseta · untuk review</p>
+        <h1 id="hero-title">Cari tahu apa yang perlu dibenahi sebelum aset menghambat operasi.</h1>
+        <p class="hero-copy">Identifikasi pain point, lihat kebutuhan fitur, dan hitung skenario dampaknya. Hasil ringkas baru dibuka setelah data Anda tercatat agar tim Aseta dapat menindaklanjutinya dengan konteks yang tepat.</p>
+        <div class="hero-actions"><a class="button button-primary" href="#problem-form">Identifikasi kebutuhan <span aria-hidden="true">→</span></a><a class="button button-outline" href="#product-overview">Kenali Aseta</a></div>
+        <p class="hero-note">Preview draft: pengisian form belum dikirim ke server produksi.</p>
+      </div>
+    </section>
+
+    <section class="section product-overview" id="product-overview" aria-labelledby="overview-title">
+      <div class="container">
+        <div class="section-heading"><p class="eyebrow">Product overview</p><h2 id="overview-title">Satu alur untuk melihat aset, pekerjaan, dan keputusan berikutnya.</h2><p class="muted">Aseta membantu tim mengelola lifecycle aset dan maintenance—mulai dari pencatatan hingga pekerjaan yang perlu ditindaklanjuti.</p></div>
+        <div class="overview-grid">
+          <article><span class="overview-number">01</span><h3>Inventaris &amp; audit</h3><p>Registrasi aset, tagging QR/RFID, lokasi, PIC, dan stock opname dalam satu struktur data.</p></article>
+          <article><span class="overview-number">02</span><h3>Lifecycle &amp; finance</h3><p>Riwayat aset, mutasi, depresiasi, dan keputusan penggantian yang lebih mudah ditelusuri.</p></article>
+          <article><span class="overview-number">03</span><h3>Maintenance terencana</h3><p>Preventive, corrective, ticket, dan work order agar pekerjaan tidak berhenti di chat atau spreadsheet.</p></article>
+          <article><span class="overview-number">04</span><h3>Kontrol lintas lokasi</h3><p>Approval, koordinasi cabang, dan integrasi dapat disusun sesuai scope organisasi.</p></article>
+        </div>
+        <div class="social-proof" aria-label="Portofolio klien Aseta">
+          <div class="social-proof-heading"><p class="eyebrow">Dipakai oleh tim dari berbagai sektor</p><p class="muted">Nama di bawah berasal dari portofolio Aseta. Ditampilkan sebagai social proof, bukan klaim hasil atau endorsement.</p></div>
+          <div class="logo-marquee" tabindex="0"><div class="logo-track"><span>PERTAMINA CEPU</span><span>HITACHI</span><span>IMPC</span><span>PTSI</span><span>REKIND</span><span>ITB</span><span>HIOKI</span><span>JFE</span><span>SICEPAT</span><span>KPP MINING</span><span>PT BINTANG</span><span>MAHARIS CLINIC</span><span>PERTAMINA CEPU</span><span>HITACHI</span><span>IMPC</span><span>PTSI</span><span>REKIND</span><span>ITB</span><span>HIOKI</span><span>JFE</span><span>SICEPAT</span><span>KPP MINING</span><span>PT BINTANG</span><span>MAHARIS CLINIC</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section problem-section" id="problem-form" aria-labelledby="problem-title">
+      <div class="container narrow-container">
+        <div class="section-heading"><p class="eyebrow">Langkah 1 · Identifikasi</p><h2 id="problem-title">Apa yang paling menghambat tim Anda hari ini?</h2><p class="muted">Pilih semua yang relevan. Jawaban ini dipakai untuk menyusun rekomendasi dan readiness score.</p></div>
+        <form class="problem-card" id="problem-identification-form">
+          <fieldset><legend>Pain point yang sedang terjadi</legend><div class="choice-grid">
+            <label class="choice"><input type="checkbox" name="pain_point" value="data-tersebar"><span><b>Data aset tersebar</b><small>Informasi aset, lokasi, dan PIC sulit dicari atau tidak sinkron.</small></span></label>
+            <label class="choice"><input type="checkbox" name="pain_point" value="audit-lambat"><span><b>Stock opname/audit memakan waktu</b><small>Tim masih mengecek aset secara manual atau berulang.</small></span></label>
+            <label class="choice"><input type="checkbox" name="pain_point" value="maintenance-reaktif"><span><b>Maintenance masih reaktif</b><small>Ticket, pekerjaan overdue, atau riwayat servis belum terkendali.</small></span></label>
+            <label class="choice"><input type="checkbox" name="pain_point" value="lintas-lokasi"><span><b>Kontrol lintas lokasi sulit</b><small>Mutasi, approval, atau koordinasi antar cabang belum rapi.</small></span></label>
+            <label class="choice"><input type="checkbox" name="pain_point" value="laporan-keuangan"><span><b>Laporan lifecycle/keuangan belum siap</b><small>Depresiasi, disposal, atau data pendukung accounting perlu ditelusuri.</small></span></label>
+          </div></fieldset>
+          <div class="profile-grid">
+            <label>Jumlah aset yang dikelola<select id="asset-range" name="asset_range" required><option value="">Pilih rentang aset</option><option value="under-50">&lt; 50</option><option value="50-199">50–200</option><option value="200-499">200–500</option><option value="500-999">500–1.000</option><option value="1000-2000">1.000–2.000</option></select></label>
+            <label>Sistem yang dipakai saat ini<select id="profile-system" name="current_system" required><option value="">Pilih sistem saat ini</option><option value="manual">Buku/catatan manual</option><option value="spreadsheet">Excel/Google Sheets</option><option value="accounting">Software accounting/ERP</option><option value="asset-software">Software asset management</option></select></label>
+            <label>Jumlah cabang/lokasi<select id="profile-branches" name="branches" required><option value="">Pilih jumlah lokasi</option><option value="1">1 lokasi</option><option value="2-5">2–5 lokasi</option><option value="6-20">6–20 lokasi</option><option value="over-20">Lebih dari 20 lokasi</option></select></label>
+            <label>Target mulai implementasi<select id="implementation-target" name="implementation_target" required><option value="">Pilih target waktu</option><option value="now">Secepatnya / 0–3 bulan</option><option value="later">3–6 bulan</option><option value="planning">6–12 bulan</option><option value="exploring">Masih eksplorasi</option></select></label>
+          </div>
+          <p class="form-hint">Belum siap mengubah proses? Pilih “Masih eksplorasi”; skor tidak akan memaksa Anda mengambil keputusan.</p>
+          <button class="button button-dark" type="submit">Lanjut ke simulasi <span aria-hidden="true">→</span></button>
+        </form>
+      </div>
+    </section>
+
+    <section class="section simulator-section" id="simulator" aria-labelledby="simulator-title">
+      <div class="container">
+        <div class="section-heading"><p class="eyebrow">Langkah 2 · Simulasi dampak</p><h2 id="simulator-title">Uji skenario dengan asumsi operasi Anda.</h2><p class="muted">Angka ini indikatif. Pilihan rentang aset dan fitur menghasilkan kisaran biaya, bukan penawaran harga.</p></div>
+        <div class="simulator-layout"><div class="calc-panel">
+          <div class="selected-profile" id="selected-profile"><span>Profil Anda</span><b id="profile-summary">Lengkapi identifikasi kebutuhan untuk mulai.</b></div>
+          <div class="calc-fields"><label>Metode identifikasi aset<select id="subscription-type"><option value="qr">QR Code</option><option value="rfid">RFID</option></select></label><label>Rentang aset aktif<select id="asset-range-summary"><option value="">Mengikuti langkah identifikasi</option><option value="under-50">&lt; 50</option><option value="50-199">50–200</option><option value="200-499">200–500</option><option value="500-999">500–1.000</option><option value="1000-2000">1.000–2.000</option></select></label></div>
+          <div class="estimator-options" id="hardware-options"><label class="choice"><input id="qr-hardware" type="checkbox"><span><b>Beli paket hardware QR Code dari Aseta</b><small>Tambahkan paket hardware &amp; consumables QR (Rp7.610.000) ke estimasi.</small></span></label><label class="choice" id="rfid-hardware-choice" hidden><input id="rfid-hardware" type="checkbox"><span><b>Beli hardware RFID dari Aseta</b><small>Tambahkan handheld reader (Rp19.500.000) dan tag RFID ke estimasi.</small></span></label><label id="rfid-tag-choice" hidden>Jenis tag RFID<select id="rfid-tag-type"><option value="180000">UHF label sticker · Rp180.000 / 100 pcs</option><option value="850000">UHF on-metal sticker · Rp850.000 / 100 pcs</option><option value="2400000">UHF on-metal ABS · Rp2.400.000 / 100 pcs</option></select></label></div>
+          <div class="range-inputs"><label>Estimasi downtime operasi per bulan <output id="dt-output">0 jam</output><input id="dt-range" type="range" min="0" max="120" value="0"></label><label>Biaya per jam downtime <output id="dtcost-output">Rp0</output><input id="dtcost-range" type="range" min="0" max="50000000" step="100000" value="0"></label><label>Biaya perbaikan reaktif per bulan <output id="repair-output">Rp0</output><input id="repair-range" type="range" min="0" max="500000000" step="5000000" value="0"></label><label>Target pengurangan breakdown <output id="reduce-output">0%</output><input id="reduce-range" type="range" min="0" max="60" step="5" value="0"></label></div>
+          <div class="enterprise-picker"><div class="picker-heading"><div><p class="eyebrow">Enterprise add-ons</p><h3>Pilih kapabilitas yang memang Anda butuhkan</h3></div><output id="enterprise-features-output">0 fitur dipilih</output></div><p class="muted">Pilihan ini menggantikan slider “jumlah fitur”. Harga dan scope setiap kapabilitas perlu dikonfirmasi bersama tim Aseta.</p><div class="feature-list">
+            <label class="feature-choice" data-enterprise-feature="depreciation"><input type="checkbox" value="depreciation"><span><b>Depresiasi aset otomatis</b><small>Perhitungan depresiasi aset berdasarkan metode yang disepakati.</small></span></label>
+            <label class="feature-choice" data-enterprise-feature="maintenance"><input type="checkbox" value="maintenance"><span><b>Maintenance &amp; work order</b><small>Preventive/corrective maintenance, ticket, dan penugasan pekerjaan.</small></span></label>
+            <label class="feature-choice" data-enterprise-feature="borrowing-disposal"><input type="checkbox" value="borrowing-disposal"><span><b>Peminjaman &amp; disposal/write-off</b><small>Pencatatan peminjaman dan proses penghapusan aset sesuai scope.</small></span></label>
+            <label class="feature-choice" data-enterprise-feature="cross-branch-approval"><input type="checkbox" value="cross-branch-approval"><span><b>Approval &amp; kontrol lintas cabang</b><small>Persetujuan mutasi dan kontrol aset multi-lokasi.</small></span></label>
+            <label class="feature-choice" data-enterprise-feature="erp-integration"><input type="checkbox" value="erp-integration"><span><b>Integrasi accounting/ERP via API</b><small>Integrasi berdasarkan kebutuhan dan scope teknis yang dikonfirmasi.</small></span></label>
+          </div></div>
+          <div class="estimator-result"><div><small>Estimasi biaya sistem tahun pertama</small><strong id="investment-output">Pilih rentang aset</strong><span id="investment-breakdown">Pilih rentang aset dan kapabilitas untuk melihat kisaran.</span></div></div>
+          <div class="calc-result-grid"><div><small>Potensi biaya terhindarkan / tahun</small><strong id="saving-result">Rp0</strong></div><div><small>ROI indikatif tahun pertama</small><strong id="roi-result">—</strong></div><div><small>Net benefit indikatif</small><strong id="net-benefit-result">—</strong></div></div>
+          <p class="calc-note">Kerugian tahunan = (downtime × biaya/jam × 12) + (perbaikan reaktif × 12). Potensi biaya terhindarkan = kerugian tahunan × target pengurangan. ROI dihitung dari kisaran biaya sistem dan merupakan simulasi, bukan jaminan.</p>
+          <button class="button button-primary" type="button" id="result-gate">Lihat hasil &amp; readiness score <span aria-hidden="true">→</span></button>
+        </div><aside class="calc-side"><h3>Bagaimana hasil ini dipakai?</h3><ol><li>Jawaban pain point membantu memetakan kebutuhan prioritas.</li><li>Pilihan fitur menunjukkan scope yang perlu dibahas bersama Sales.</li><li>Readiness score hanya mengatur prioritas follow-up, bukan menilai kelayakan bisnis Anda.</li></ol><div class="disclosure"><b>Transparansi Enterprise</b><p>Enterprise adalah rekomendasi saat kebutuhan lifecycle, maintenance, governance, atau integrasi melampaui Essentials. Detail paket, add-on, harga, dan implementasi dikonfirmasi bersama tim Aseta.</p></div></aside></div>
+      </div>
+    </section>
+
+    <section class="section results-section" id="results" aria-labelledby="results-title" hidden>
+      <div class="container results-card"><div class="results-heading"><p class="eyebrow">Langkah 3 · Hasil Anda</p><h2 id="results-title">Ringkasan kesiapan pengelolaan aset.</h2><p class="muted">Gunakan hasil ini sebagai bahan diskusi internal dan follow-up bersama tim Aseta.</p></div><div class="results-grid"><div class="score-card"><small>Readiness score</small><strong id="readiness-score">0</strong><b id="readiness-label">—</b><p id="readiness-reason"></p></div><div class="recommendation-card"><small>Rekomendasi awal</small><strong id="recommendation-plan">—</strong><p id="recommendation-reason"></p><p id="result-feature-summary"></p></div></div><div class="result-actions"><button class="button button-dark" type="button" id="download-result">Download ringkasan PDF</button><button class="button button-outline" type="button" id="whatsapp-result">Lanjut ke WhatsApp Aseta ↗</button></div><p class="result-disclaimer">Hasil bersifat indikatif dan belum merupakan penawaran harga atau keputusan implementasi.</p></div>
+    </section>
+
+    <section class="section faq" id="faq"><div class="container faq-grid"><div><p class="eyebrow">Masih ingin mengecek?</p><h2>Jawaban sebelum mengambil langkah.</h2><p class="muted">Gunakan pertanyaan ini sebagai checklist evaluasi internal.</p></div><div class="faq-list"><details><summary>Apakah saya harus meeting sebelum melihat hasil?</summary><p>Tidak. Anda bisa menyelesaikan identifikasi dan simulasi lebih dulu. Data dicatat sebelum hasil dibuka agar tim Aseta dapat menindaklanjuti dengan konteks yang relevan.</p></details><details><summary>Apakah hasil kalkulator adalah harga penawaran?</summary><p>Bukan. Kalkulator memakai harga acuan dan menghasilkan kisaran untuk membantu menyusun scope awal. Harga, add-on, integrasi, dan implementasi perlu dikonfirmasi.</p></details><details><summary>Apa arti readiness score?</summary><p>Score merangkum sinyal urgensi, kompleksitas, pain point, dan kelengkapan kebutuhan. Ini membantu Sales menentukan prioritas follow-up, bukan menilai perusahaan Anda.</p></details><details><summary>Apakah Aseta menggantikan ERP?</summary><p>Aseta berfokus pada asset lifecycle dan maintenance management. Integrasi dengan accounting/ERP dapat dievaluasi berdasarkan kebutuhan organisasi.</p></details></div></div></section>
+    <section class="section start-section" id="mulai"><div class="container start-card"><div><p class="eyebrow">Siap berdiskusi?</p><h2>Mulai dari keputusan, bukan presentasi.</h2><p>Isi ringkasan kebutuhan dan bawa hasilnya ke tim Anda. Konsultasi tersedia ketika memang dibutuhkan.</p></div><a class="button button-primary" href="#problem-form">Ulangi identifikasi →</a></div></section>
+  </main>
+
+  <dialog class="lead-dialog" id="lead-dialog" aria-labelledby="lead-dialog-title"><div class="lead-dialog-card"><form id="simulator-lead-form" data-lead-endpoint=""><button class="lead-dialog-close" type="button" data-close-lead aria-label="Tutup form">×</button><p class="eyebrow">Sebelum membuka hasil</p><h3 id="lead-dialog-title">Simpan ringkasan kebutuhan Anda</h3><p>Data ini masuk ke bank leads agar tim Aseta dapat menghubungi Anda dengan konteks yang sudah Anda isi. WhatsApp tidak wajib dikirim.</p><label>Nama lengkap<input name="name" type="text" autocomplete="name" required></label><label>Email perusahaan<input name="email" type="email" autocomplete="email" required></label><label>Nama perusahaan<input name="company" type="text" autocomplete="organization" required></label><label>Jabatan<input name="position" type="text" autocomplete="organization-title" required></label><label>Nomor WhatsApp<div class="lead-phone-field"><span aria-hidden="true">+62</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="812 3456 7890" required></div></label><label class="lead-consent"><input name="consent" type="checkbox" required><span>Saya setuju data ini digunakan tim Aseta untuk menghubungi saya terkait hasil simulasi dan kebutuhan pengelolaan aset.</span></label><p class="lead-error" id="lead-error" role="alert" hidden></p><button class="button button-primary" id="lead-submit" type="submit">Simpan &amp; buka hasil</button></form></div></dialog>
+  <footer class="site-footer"><div class="container footer-grid"><div><a class="brand" href="#top"><img src="assets/aseta-brand-logo.png" alt="Aseta"></a><p>Asset &amp; maintenance management untuk tim yang ingin bekerja lebih terencana.</p></div><nav aria-label="Tautan footer"><a href="https://aseta.id/harga.html">Paket</a><a href="https://aseta.id/tentang_kami.html">Tentang Kami</a><a href="https://aseta.id/hubungi_kami.html">Hubungi Kami</a></nav><div><small>Draft preview · belum live</small><p>© Aseta · PT Nuansa Cerah Informasi</p></div></div></footer>
+  <script src="aseta-self-serve.js"></script>
+</body>
+</html>
