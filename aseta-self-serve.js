@@ -132,12 +132,14 @@
   $('#asset-range-summary').addEventListener('change', () => { $('#asset-range').value = $('#asset-range-summary').value; updateProfileSummary(); updateEstimate(); });
   $$('.calc-panel input, .calc-panel select').forEach((input) => input.addEventListener('input', updateEstimate));
   $$('.calc-panel input, .calc-panel select').forEach((input) => input.addEventListener('change', updateEstimate));
-  $('#subscription-type').addEventListener('change', () => {
+  const syncHardwareOptions = () => {
     const isRfid = $('#subscription-type').value === 'rfid';
+    $('#qr-hardware-choice').hidden = isRfid;
     $('#rfid-hardware-choice').hidden = !isRfid;
-    $('#rfid-tag-choice').hidden = !isRfid;
-    updateEstimate();
-  });
+    $('#rfid-tag-choice').hidden = !(isRfid && $('#rfid-hardware').checked);
+  };
+  $('#subscription-type').addEventListener('change', () => { syncHardwareOptions(); updateEstimate(); });
+  $('#rfid-hardware').addEventListener('change', syncHardwareOptions);
   $('#result-gate').addEventListener('click', () => { $('#lead-error').hidden = true; dialog.showModal(); $('#simulator-lead-form [name="name"]').focus(); });
   $('[data-close-lead]').addEventListener('click', () => dialog.close());
   $('#simulator-lead-form').addEventListener('submit', (event) => {
@@ -162,5 +164,5 @@
     const message = `Halo tim Aseta, saya sudah mengisi simulasi. Readiness score: ${state.score}. Rekomendasi: ${$('#recommendation-plan').textContent}. Rentang aset: ${assetRanges[state.profile.assetRange]?.label || '—'}. Fitur: ${state.features.map((id) => enterpriseFeatureLabels[id]).join(', ') || 'belum dipilih'}.`;
     window.open(`https://wa.me/6281217984959?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
   });
-  updateEstimate(); updateProfileSummary();
+  syncHardwareOptions(); updateEstimate(); updateProfileSummary();
 })();
