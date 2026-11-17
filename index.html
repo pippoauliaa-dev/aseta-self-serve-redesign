@@ -6,6 +6,9 @@
   <meta name="description" content="Kenali kebutuhan pengelolaan aset dan maintenance tim Anda dengan simulasi interaktif Aseta.">
   <meta name="theme-color" content="#173b78">
   <title>Kenali Kesiapan Pengelolaan Aset Anda | Aseta — Draft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="aseta-self-serve.css">
 </head>
 <body>
@@ -175,6 +178,9 @@
     }
     window.addEventListener('load', fitHeadings);
     window.addEventListener('resize', fitHeadings);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(fitHeadings);
+    }
     fitHeadings();
   })();
   </script>
