@@ -1,20 +1,31 @@
 # Logo Klien — Portofolio
 
-Taruh file logo di folder ini dengan nama berikut. Format PNG/SVG, background transparan, tinggi minimal 80px (akan ditampilkan 26px di marquee).
+Semua logo diambil dari halaman `https://aseta.id/tentang_kami.html` (`img/client-aseta-2026.webp`) lalu dipotong per klien.
 
-| Klien | Nama file | Status |
-|---|---|---|
-| Pertamina Cepu | `pertamina-cepu.png` | ⬜ belum |
-| Hitachi | `hitachi.png` | ⬜ belum |
-| IMPC | `impc.png` | ⬜ belum |
-| PTSI | `ptsi.png` | ⬜ belum |
-| Rekind | `rekind.png` | ⬜ belum |
-| ITB | `itb.png` | ✅ ada |
-| Hioki | `hioki.png` | ✅ ada |
-| JFE | `jfe.png` | ⬜ belum |
-| Sicepat | `sicepat.png` | ⬜ belum |
-| KPP Mining | `kpp-mining.png` | ⬜ belum |
-| PT Bintang | `pt-bintang.png` | ⬜ belum |
-| Maharis Clinic | `maharis-clinic.png` | ⬜ belum |
+| Klien | File |
+|---|---|
+| KPP Mining Astra | `kpp-mining.png` |
+| Energy Equity | `energy-equity.png` |
+| Tawada | `tawada.png` |
+| JFE | `jfe.png` |
+| Hioki | `hioki.png` |
+| Montana Machine | `montana-machine.png` |
+| Kanara | `kanara.png` |
+| KSA Grup | `ksa-grup.png` |
+| PT Wulandari Bangun Laksana Tbk | `wbl.png` |
+| Myamo Beach Lodge | `myamo-beach-lodge.png` |
+| EM Hill Estate Lodge | `em-hill.png` |
+| Maharis Clinic | `maharis-clinic.png` |
+| RS Dewi Sri | `rs-dewi-sri.png` |
+| Karada Factory | `karada.png` |
+| Institut Teknologi Bandung | `itb.png` |
+| Garuda Indonesia | `garuda.png` |
+| UMAS | `umas.png` |
+| Sicepat Ekspres | `sicepat.png` |
+| Yummy Bites | `yummy-bites.png` |
+| CV Sinnar Luciana Jaya | `cv-sinnar-luciana.png` |
+| Bintang | `bintang.png` |
+| Usaha Kita Sentosa | `usaha-kita.png` |
+| CM Group | `cm-group.png` |
 
-Logo yang belum ada akan otomatis tampil sebagai teks nama (fallback), jadi halaman tetap rapi sampai file aslinya dimasukkan.
+`client-a.png` dan `client-b.png` adalah dua logo yang belum teridentifikasi namanya — perlu dicek manual. Kalau nama aslinya sudah diketahui, ganti nama file lalu sesuaikan `LOGOS` di `index.html`.
