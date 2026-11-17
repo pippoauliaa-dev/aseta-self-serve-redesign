@@ -1,5 +1,7 @@
+import json
 import threading
 import unittest
+import urllib.parse
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -14,6 +16,23 @@ class DraftHandler(SimpleHTTPRequestHandler):
 
     def log_message(self, *_args):
         pass
+
+    def do_POST(self):
+        length = int(self.headers.get('Content-Length', 0))
+        params = {key: values[0] for key, values in urllib.parse.parse_qs(self.rfile.read(length).decode('utf-8')).items()}
+        payload = json.dumps({
+            'type': 'aseta-lead-result',
+            'status': 'success',
+            'requestId': params.get('request_id'),
+            'attemptId': params.get('attempt_id'),
+        })
+        origin = self.headers.get('Origin') or '*'
+        body = f'<!doctype html><script>window.top.parent.postMessage({payload}, "{origin}");</script>'.encode('utf-8')
+        self.send_response(200)
+        self.send_header('Content-Type', 'text/html; charset=utf-8')
+        self.send_header('Content-Length', str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
 
 
 class RedesignDraftTests(unittest.TestCase):
@@ -62,6 +81,41 @@ class RedesignDraftTests(unittest.TestCase):
     def test_implementation_target_is_required(self):
         self.assertEqual(self.page.locator("#implementation-target").get_attribute("required"), "")
         self.assertGreaterEqual(self.page.locator("#implementation-target option").count(), 4)
+
+    def test_lead_form_posts_to_endpoint_before_showing_results(self):
+        endpoint = f"http://127.0.0.1:{self.server.server_port}/lead"
+        self.page.evaluate("url => document.querySelector('#simulator-lead-form').dataset.leadEndpoint = url", endpoint)
+        self.page.locator("#asset-range-summary").select_option("200-499")
+        self.page.locator("#result-gate").click()
+        self.page.locator('#simulator-lead-form [name="name"]').fill("Uji Coba")
+        self.page.locator('#simulator-lead-form [name="email"]').fill("uji@example.com")
+        self.page.locator('#simulator-lead-form [name="company"]').fill("PT Uji")
+        self.page.locator('#simulator-lead-form [name="position"]').fill("QA")
+        self.page.locator('#simulator-lead-form [name="phone"]').fill("081234567890")
+        self.page.locator('#simulator-lead-form [name="consent"]').check()
+        self.page.locator("#lead-submit").click()
+        self.page.wait_for_selector("#results:not([hidden])", timeout=5000)
+        self.assertFalse(self.page.evaluate("document.querySelector('#lead-dialog').open"))
+        self.assertTrue(self.page.locator("#lead-error").is_hidden())
+        self.assertTrue(self.page.locator("#lead-fallback").is_hidden())
+
+    def test_result_download_produces_pdf(self):
+        endpoint = f"http://127.0.0.1:{self.server.server_port}/lead"
+        self.page.evaluate("url => document.querySelector('#simulator-lead-form').dataset.leadEndpoint = url", endpoint)
+        self.page.locator("#asset-range-summary").select_option("200-499")
+        self.page.locator("#result-gate").click()
+        self.page.locator('#simulator-lead-form [name="name"]').fill("Uji Coba")
+        self.page.locator('#simulator-lead-form [name="email"]').fill("uji@example.com")
+        self.page.locator('#simulator-lead-form [name="company"]').fill("PT Uji")
+        self.page.locator('#simulator-lead-form [name="position"]').fill("QA")
+        self.page.locator('#simulator-lead-form [name="phone"]').fill("081234567890")
+        self.page.locator('#simulator-lead-form [name="consent"]').check()
+        self.page.locator("#lead-submit").click()
+        self.page.wait_for_selector("#results:not([hidden])", timeout=5000)
+        with self.page.expect_download() as download:
+            self.page.locator("#download-result").click()
+        with open(download.value.path(), "rb") as handle:
+            self.assertEqual(handle.read(5), b"%PDF-")
 
     def test_mobile_menu_toggles_and_closes_after_navigation(self):
         page = self.browser.new_page(viewport={"width": 390, "height": 844})

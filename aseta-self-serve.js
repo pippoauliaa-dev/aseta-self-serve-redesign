@@ -168,25 +168,293 @@
   };
   $('#subscription-type').addEventListener('change', () => { syncHardwareOptions(); updateEstimate(); });
   $('#rfid-hardware').addEventListener('change', syncHardwareOptions);
-  $('#result-gate').addEventListener('click', () => { $('#lead-error').hidden = true; dialog.showModal(); $('#simulator-lead-form [name="name"]').focus(); });
+  const leadForm = $('#simulator-lead-form');
+  const leadError = $('#lead-error');
+  const leadSubmit = $('#lead-submit');
+  const leadFallback = $('#lead-fallback');
+  const normalizePhone = (value) => {
+    let digits = String(value || '').replace(/\D/g, '');
+    if (digits.startsWith('0062')) digits = digits.slice(4);
+    else if (digits.startsWith('62')) digits = digits.slice(2);
+    else if (digits.startsWith('0')) digits = digits.slice(1);
+    return digits ? `62${digits}` : '';
+  };
+  const makeRequestId = () => globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const attribution = new URLSearchParams(window.location.search);
+  const attributionFields = Object.fromEntries(['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid'].map((key) => [key, attribution.get(key) || '']));
+  let retryRequestId = '';
+  const buildLeadMessage = (data) => {
+    const estimate = state.estimate;
+    return [
+      'Halo tim Aseta, saya sudah mengisi simulasi.',
+      `Nama: ${data.name}`,
+      `Perusahaan: ${data.company}`,
+      `Jabatan: ${data.position}`,
+      `Email: ${data.email}`,
+      `WhatsApp: +${normalizePhone(data.phone)}`,
+      estimate ? `Rentang aset: ${estimate.range.label}` : '',
+      estimate ? `Estimasi biaya tahun pertama: ${fmtRp(estimate.low)}–${fmtRp(estimate.high)}` : '',
+      estimate ? `Potensi biaya terhindarkan: ${fmtRp(estimate.annualSaving)}` : '',
+      `Readiness score: ${calculateScore()}`
+    ].filter(Boolean).join('\n');
+  };
+  const submitLeadToSheet = (data, requestId) => new Promise((resolve, reject) => {
+    const endpoint = leadForm.dataset.leadEndpoint.trim();
+    if (!endpoint) { reject(new Error('Integrasi Google Sheets belum dikonfigurasi.')); return; }
+    let scriptUrl;
+    try { scriptUrl = new URL(endpoint, window.location.href); }
+    catch (error) { reject(new Error('URL Google Apps Script tidak valid. Periksa konfigurasi integrasi.')); return; }
+    if (!['script.google.com', '127.0.0.1', 'localhost'].includes(scriptUrl.hostname) || (scriptUrl.hostname === 'script.google.com' && scriptUrl.protocol !== 'https:')) {
+      reject(new Error('URL Google Apps Script tidak valid. Periksa konfigurasi integrasi.')); return;
+    }
+    const attemptId = makeRequestId();
+    const frame = document.createElement('iframe');
+    const form = document.createElement('form');
+    const cleanup = () => { clearTimeout(timeout); window.removeEventListener('message', onMessage); frame.remove(); form.remove(); };
+    const timeout = setTimeout(() => { cleanup(); reject(new Error('Respons Google Sheets tidak diterima. Coba lagi.')); }, 20000);
+    const onMessage = (event) => {
+      let origin;
+      try { origin = new URL(event.origin); } catch (error) { return; }
+      if (event.source === window || !(origin.origin === scriptUrl.origin || origin.hostname.endsWith('-script.googleusercontent.com'))) return;
+      const result = event.data;
+      if (result?.type !== 'aseta-lead-result' || result.requestId !== requestId || result.attemptId !== attemptId) return;
+      cleanup();
+      if (result.status === 'success') { retryRequestId = ''; resolve(); }
+      else reject(new Error('Data belum tersimpan di Google Sheets. Coba lagi.'));
+    };
+    frame.name = `aseta-lead-${attemptId}`;
+    frame.hidden = true;
+    form.action = scriptUrl.href;
+    form.method = 'post';
+    form.target = frame.name;
+    form.acceptCharset = 'UTF-8';
+    form.hidden = true;
+    const estimate = state.estimate;
+    const investment = estimate ? Math.round((estimate.low + estimate.high) / 2) : 0;
+    const annualSaving = estimate ? Math.round(estimate.annualSaving) : 0;
+    const netBenefit = investment ? annualSaving - investment : 0;
+    const roi = investment ? Math.round(netBenefit / investment * 100) : '';
+    const payback = investment && annualSaving > 0 ? Math.round(investment / (annualSaving / 12) * 10) / 10 : '';
+    const fields = {
+      ...data,
+      phone: normalizePhone(data.phone),
+      ...attributionFields,
+      request_id: requestId,
+      attempt_id: attemptId,
+      website: '',
+      consent: 'yes',
+      downtime: String(Number($('#dt-range')?.value || 0)),
+      downtime_cost_per_hour: String(Number($('#dtcost-range')?.value || 0)),
+      reactive_repair_cost_monthly: String(Number($('#repair-range')?.value || 0)),
+      breakdown_reduction_target: String(Number($('#reduce-range')?.value || 0)),
+      annual_loss: String(estimate ? Math.round(estimate.annualLoss) : 0),
+      annual_saving: String(annualSaving),
+      annual_investment_estimate: estimate ? String(investment) : '',
+      annual_net_benefit_estimate: estimate ? String(netBenefit) : '',
+      roi_estimate_percent: roi === '' ? '' : String(roi),
+      payback_months_estimate: payback === '' ? '' : String(payback),
+      source: window.location.href,
+      submitted_at: new Date().toISOString()
+    };
+    Object.entries(fields).forEach(([name, value]) => {
+      const input = document.createElement('input');
+      input.type = 'hidden'; input.name = name; input.value = value;
+      form.append(input);
+    });
+    window.addEventListener('message', onMessage);
+    document.body.append(frame, form);
+    form.submit();
+  });
+  $('#result-gate').addEventListener('click', () => { leadError.hidden = true; if (leadFallback) leadFallback.hidden = true; dialog.showModal(); leadForm.querySelector('[name="name"]').focus(); });
   $('[data-close-lead]').addEventListener('click', () => dialog.close());
-  $('#simulator-lead-form').addEventListener('submit', (event) => {
+  leadForm.addEventListener('submit', async (event) => {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    state.lead = Object.fromEntries(form.entries());
+    if (!leadForm.reportValidity()) return;
+    const data = Object.fromEntries(new FormData(leadForm).entries());
+    state.lead = data;
     state.profile = getProfile();
     state.features = selectedFeatures();
     state.painPoints = $$('[name="pain_point"]:checked').map((input) => input.value);
-    const saved = JSON.parse(localStorage.getItem('asetaDraftLeads') || '[]');
-    saved.push({ ...state.lead, profile: state.profile, painPoints: state.painPoints, enterpriseFeatures: state.features, readinessScore: calculateScore(), estimate: state.estimate, savedAt: new Date().toISOString() });
-    localStorage.setItem('asetaDraftLeads', JSON.stringify(saved));
-    dialog.close();
-    renderResults();
+    const requestId = retryRequestId || makeRequestId();
+    const originalLabel = leadSubmit.textContent;
+    leadError.hidden = true;
+    if (leadFallback) leadFallback.hidden = true;
+    leadSubmit.disabled = true;
+    leadSubmit.textContent = 'Menyimpan data…';
+    try {
+      await submitLeadToSheet(data, requestId);
+      const saved = JSON.parse(localStorage.getItem('asetaDraftLeads') || '[]');
+      saved.push({ ...data, profile: state.profile, painPoints: state.painPoints, enterpriseFeatures: state.features, readinessScore: calculateScore(), estimate: state.estimate, savedAt: new Date().toISOString() });
+      localStorage.setItem('asetaDraftLeads', JSON.stringify(saved));
+      dialog.close();
+      renderResults();
+    } catch (error) {
+      if (error.message.startsWith('Data belum tersimpan') || error.message.startsWith('Respons Google Sheets')) retryRequestId = requestId;
+      leadError.textContent = error.message || 'Data belum berhasil disimpan. Silakan coba lagi.';
+      leadError.hidden = false;
+      if (leadFallback) {
+        leadFallback.href = `https://wa.me/6281217984959?text=${encodeURIComponent(buildLeadMessage(data))}`;
+        leadFallback.hidden = false;
+      }
+    } finally {
+      leadSubmit.disabled = false;
+      leadSubmit.textContent = originalLabel;
+    }
   });
-  $('#download-result').addEventListener('click', () => {
-    const text = ['Ringkasan Simulasi Aseta (Draft)', `Readiness score: ${state.score}`, `Rekomendasi: ${$('#recommendation-plan').textContent}`, `Rentang aset: ${assetRanges[state.profile.assetRange]?.label || '—'}`, `Fitur Enterprise: ${state.features.map((id) => enterpriseFeatureLabels[id]).join(', ') || 'Tidak ada'}`, `Estimasi biaya: ${$('#investment-output').textContent}`, `Potensi biaya terhindarkan: ${$('#saving-result').textContent}`].join('\n');
-    const blob = new Blob([text], { type: 'text/plain' });
-    const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'aseta-ringkasan-draft.txt'; link.click(); URL.revokeObjectURL(link.href);
+  const generatePdf = async () => {
+    await document.fonts?.ready;
+    const estimate = state.estimate;
+    const canvas = document.createElement('canvas');
+    canvas.width = 1860;
+    canvas.height = 2631;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(1.5, 1.5);
+    const colors = { navy: '#173b78', blue: '#1c4488', gold: '#f3b000', ink: '#263449', muted: '#718096', line: '#dce4ee', pale: '#f4f7fb', white: '#ffffff' };
+    const date = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date());
+    const roundRect = (x, y, w, h, r, fill, stroke) => {
+      ctx.beginPath(); ctx.roundRect(x, y, w, h, r);
+      if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+      if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 2; ctx.stroke(); }
+      ctx.beginPath();
+    };
+    const text = (value, x, y, size, color = colors.ink, weight = 400) => {
+      ctx.font = `${weight} ${size}px Inter, Arial, sans-serif`;
+      ctx.fillStyle = color;
+      ctx.fillText(value, x, y);
+    };
+    const paragraph = (value, x, y, maxWidth, lineHeight, size, color = colors.muted, weight = 400) => {
+      ctx.font = `${weight} ${size}px Inter, Arial, sans-serif`;
+      ctx.fillStyle = color;
+      let line = '';
+      let row = 0;
+      value.split(' ').forEach((word) => {
+        const next = line ? `${line} ${word}` : word;
+        if (ctx.measureText(next).width > maxWidth && line) {
+          ctx.fillText(line, x, y + row++ * lineHeight);
+          line = word;
+        } else line = next;
+      });
+      if (line) ctx.fillText(line, x, y + row * lineHeight);
+      return row + 1;
+    };
+    const money = (value) => fmtRp(value);
+    const rangeMoney = (low, high) => low === high ? money(low) : `${money(low)}–${money(high)}`;
+    const methodLabel = estimate?.method === 'rfid' ? 'RFID' : 'QR Code';
+    const subscription = estimate ? estimate.range.subscription[estimate.method] : [0, 0];
+    const investmentLow = estimate ? estimate.low : 0;
+    const investmentHigh = estimate ? estimate.high : 0;
+    const investmentMid = estimate ? (estimate.low + estimate.high) / 2 : 0;
+    const annualSaving = estimate ? estimate.annualSaving : 0;
+    const netBenefit = estimate ? annualSaving - investmentMid : 0;
+    const roi = investmentMid ? Math.round(netBenefit / investmentMid * 100) : null;
+    const payback = investmentMid && annualSaving > 0 ? investmentMid / (annualSaving / 12) : null;
+    const featureList = state.features.map((id) => enterpriseFeatureLabels[id]).join(', ') || 'Tidak ada';
+
+    ctx.fillStyle = colors.white;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = colors.navy;
+    ctx.fillRect(0, 0, 1240, 390);
+    ctx.fillStyle = colors.gold;
+    ctx.fillRect(0, 386, canvas.width, 6);
+    roundRect(92, 70, 56, 56, 14, colors.gold);
+    text('A', 110, 109, 34, colors.navy, 800);
+    text('ASETA  |  ASSET & MAINTENANCE MANAGEMENT', 170, 103, 20, '#d9e5f7', 700);
+    text('Ringkasan Kebutuhan Sistem Aset', 92, 205, 46, colors.white, 700);
+    text('Hasil identifikasi kebutuhan dan simulasi biaya', 92, 253, 27, '#d9e5f7', 400);
+    text(`Dibuat ${date}`, 92, 322, 20, '#d9e5f7', 400);
+
+    text('HASIL UTAMA', 92, 454, 18, colors.blue, 700);
+    roundRect(92, 482, 506, 218, 18, colors.pale, colors.line);
+    roundRect(620, 482, 528, 218, 18, '#fff9e9', '#f4dfaa');
+    text('Readiness score', 122, 535, 19, colors.muted, 500);
+    text(String(state.score), 122, 610, 64, colors.blue, 800);
+    text($('#readiness-label').textContent, 122, 650, 20, colors.ink, 700);
+    text('Rekomendasi', 650, 535, 19, colors.muted, 500);
+    text($('#recommendation-plan').textContent, 650, 590, 34, colors.ink, 800);
+    paragraph($('#recommendation-reason').textContent, 650, 630, 455, 26, 16);
+
+    text('ESTIMASI BIAYA TAHUN PERTAMA', 92, 762, 18, colors.blue, 700);
+    roundRect(92, 790, 1056, 112, 16, colors.white, colors.line);
+    ctx.fillStyle = colors.line; ctx.fillRect(620, 790, 2, 112);
+    text('Kisaran total biaya sistem', 126, 833, 18, colors.muted, 500);
+    text(estimate ? rangeMoney(investmentLow, investmentHigh) : 'Pilih rentang aset', 126, 873, estimate ? 28 : 18, colors.ink, 700);
+    text('Potensi biaya terhindarkan / tahun', 664, 833, 18, colors.muted, 500);
+    text(estimate ? money(annualSaving) : '—', 664, 873, 28, colors.blue, 700);
+
+    text('RINCIAN SIMULASI', 92, 975, 18, colors.blue, 700);
+    const rows = [
+      ['Rentang aset aktif', estimate ? estimate.range.label : '—'],
+      ['Metode identifikasi', methodLabel],
+      ['Langganan tahunan', estimate ? rangeMoney(subscription[0] * 12, subscription[1] * 12) : '—'],
+      ['Hardware', estimate && estimate.hardware[0] ? rangeMoney(estimate.hardware[0], estimate.hardware[1]) : 'Tidak disertakan'],
+      ['Kapabilitas Enterprise', featureList],
+      ['Estimasi kerugian tahunan', estimate ? money(estimate.annualLoss) : '—'],
+      ['Potensi biaya terhindarkan', estimate ? money(annualSaving) : '—'],
+      ['Net benefit indikatif tahun pertama', estimate ? money(netBenefit) : '—'],
+      ['ROI indikatif tahun pertama', roi === null ? '—' : `${roi}%`],
+      ['Estimasi balik modal', payback === null ? '—' : `${payback.toLocaleString('id-ID', { maximumFractionDigits: 1 })} bulan`]
+    ];
+    rows.forEach(([label, value], index) => {
+      const y = 1019 + index * 38;
+      if (index % 2 === 0) { ctx.fillStyle = colors.pale; ctx.fillRect(92, y - 22, 1056, 34); }
+      text(label, 116, y + 5, 19, colors.ink, 500);
+      ctx.font = '700 19px Inter, Arial, sans-serif';
+      ctx.fillStyle = colors.ink;
+      ctx.textAlign = 'right'; ctx.fillText(value, 1118, y + 5); ctx.textAlign = 'left';
+    });
+
+    text('METODE PERHITUNGAN', 92, 1440, 18, colors.blue, 700);
+    paragraph('Kerugian tahunan = (downtime bulanan × biaya downtime per jam × 12) + (biaya perbaikan reaktif bulanan × 12). Potensi biaya terhindarkan = kerugian tahunan × target pengurangan breakdown.', 92, 1475, 1040, 23, 15, colors.muted);
+    paragraph('Estimasi biaya sistem mencakup langganan tahunan, kapabilitas Enterprise yang dipilih, dan hardware bila disertakan. Net benefit = potensi biaya terhindarkan − titik tengah estimasi biaya. ROI = net benefit ÷ estimasi biaya × 100%. Balik modal membandingkan estimasi biaya dengan potensi penghematan bulanan yang diasumsikan merata.', 92, 1535, 1056, 22, 14, colors.muted);
+    ctx.strokeStyle = colors.line; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(92, 1640); ctx.lineTo(1148, 1640); ctx.stroke();
+    text('CATATAN', 92, 1677, 15, colors.blue, 700);
+    paragraph('Simulasi indikatif, bukan hasil aktual, jaminan penghematan, audit finansial, atau penawaran harga. Estimasi biaya dihitung dari acuan harga yang tersedia dan pilihan pengguna; validasi asumsi dan scope ke tim Aseta sebelum mengambil keputusan.', 92, 1712, 1056, 22, 14, colors.muted);
+    text('Aseta · Kelola aset dengan data. Jaga operasi tetap berjalan.', 92, 1800, 15, colors.navy, 700);
+
+    const jpeg = Uint8Array.from(atob(canvas.toDataURL('image/jpeg', 0.94).split(',')[1]), (char) => char.charCodeAt(0));
+    const encoder = new TextEncoder();
+    const chunks = [];
+    let length = 0;
+    const append = (chunk) => { chunks.push(chunk); length += chunk.length; };
+    const addText = (value) => { const chunk = encoder.encode(value); append(chunk); if (chunk.length !== value.length) throw new Error('Karakter di luar rentang ASCII pada struktur PDF.'); };
+    const offsets = [];
+    const object = (id, value) => { offsets[id] = length; addText(`${id} 0 obj\n${value}\nendobj\n`); };
+    addText('%PDF-1.4\n');
+    object(1, '<< /Type /Catalog /Pages 2 0 R >>');
+    object(2, '<< /Type /Pages /Kids [3 0 R] /Count 1 >>');
+    object(3, '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>');
+    offsets[4] = length;
+    addText(`4 0 obj\n<< /Type /XObject /Subtype /Image /Width ${canvas.width} /Height ${canvas.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpeg.length} >>\nstream\n`);
+    append(jpeg);
+    addText('\nendstream\nendobj\n');
+    const stream = encoder.encode('q\n595.28 0 0 841.89 0 0 cm\n/Im0 Do\nQ\n');
+    offsets[5] = length;
+    addText(`5 0 obj\n<< /Length ${stream.length} >>\nstream\n`);
+    append(stream);
+    addText('endstream\nendobj\n');
+    const xref = length;
+    addText(`xref\n0 6\n0000000000 65535 f \n${offsets.slice(1).map((offset) => `${String(offset).padStart(10, '0')} 00000 n \n`).join('')}trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`);
+    return new Blob(chunks, { type: 'application/pdf' });
+  };
+  $('#download-result').addEventListener('click', async () => {
+    const button = $('#download-result');
+    const originalLabel = button.textContent;
+    button.disabled = true;
+    button.textContent = 'Menyiapkan PDF…';
+    try {
+      const pdf = await generatePdf();
+      const url = URL.createObjectURL(pdf);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `aseta-ringkasan-kebutuhan-${new Date().toISOString().slice(0, 10)}.pdf`;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (error) {
+      window.alert('PDF gagal dibuat. Silakan coba lagi.');
+    } finally {
+      button.disabled = false;
+      button.textContent = originalLabel;
+    }
   });
   $('#whatsapp-result').addEventListener('click', () => {
     const message = `Halo tim Aseta, saya sudah mengisi simulasi. Readiness score: ${state.score}. Rekomendasi: ${$('#recommendation-plan').textContent}. Rentang aset: ${assetRanges[state.profile.assetRange]?.label || '—'}. Fitur: ${state.features.map((id) => enterpriseFeatureLabels[id]).join(', ') || 'belum dipilih'}.`;

@@ -12,3 +12,5 @@
 .start-card>div{min-width:0}.start-card .button{flex:0 0 auto;white-space:nowrap}
 
 @media(max-width:800px){.main-nav a:not(.button){padding:10px 4px}.main-nav{gap:4px}}
+
+.lead-fallback{display:block;text-align:center;font-size:12px;font-weight:700;color:var(--blue);text-decoration:underline}
