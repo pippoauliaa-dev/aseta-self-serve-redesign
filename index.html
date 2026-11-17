@@ -42,7 +42,42 @@
         </div>
         <div class="social-proof" aria-label="Portofolio klien Aseta">
           <div class="social-proof-heading"><p class="eyebrow">Dipakai oleh tim dari berbagai sektor</p><p class="muted">Nama di bawah berasal dari portofolio Aseta. Ditampilkan sebagai social proof, bukan klaim hasil atau endorsement.</p></div>
-          <div class="logo-marquee" tabindex="0"><div class="logo-track"><span>PERTAMINA CEPU</span><span>HITACHI</span><span>IMPC</span><span>PTSI</span><span>REKIND</span><span>ITB</span><span>HIOKI</span><span>JFE</span><span>SICEPAT</span><span>KPP MINING</span><span>PT BINTANG</span><span>MAHARIS CLINIC</span><span>PERTAMINA CEPU</span><span>HITACHI</span><span>IMPC</span><span>PTSI</span><span>REKIND</span><span>ITB</span><span>HIOKI</span><span>JFE</span><span>SICEPAT</span><span>KPP MINING</span><span>PT BINTANG</span><span>MAHARIS CLINIC</span></div></div>
+          <div class="logo-marquee" tabindex="0"><div class="logo-track" id="logo-track"></div></div>
+          <script>
+          (function () {
+            var LOGOS = [
+              { name: 'PERTAMINA CEPU', src: 'assets/logos/pertamina-cepu.png' },
+              { name: 'HITACHI', src: 'assets/logos/hitachi.png' },
+              { name: 'IMPC', src: 'assets/logos/impc.png' },
+              { name: 'PTSI', src: 'assets/logos/ptsi.png' },
+              { name: 'REKIND', src: 'assets/logos/rekind.png' },
+              { name: 'ITB', src: 'assets/logos/itb.png' },
+              { name: 'HIOKI', src: 'assets/logos/hioki.png' },
+              { name: 'JFE', src: 'assets/logos/jfe.png' },
+              { name: 'SICEPAT', src: 'assets/logos/sicepat.png' },
+              { name: 'KPP MINING', src: 'assets/logos/kpp-mining.png' },
+              { name: 'PT BINTANG', src: 'assets/logos/pt-bintang.png' },
+              { name: 'MAHARIS CLINIC', src: 'assets/logos/maharis-clinic.png' }
+            ];
+            var track = document.getElementById('logo-track');
+            if (!track) return;
+            function makeItem(logo) {
+              var img = document.createElement('img');
+              img.src = logo.src;
+              img.alt = logo.name;
+              img.loading = 'lazy';
+              img.onerror = function () {
+                var span = document.createElement('span');
+                span.textContent = logo.name;
+                img.replaceWith(span);
+              };
+              return img;
+            }
+            LOGOS.concat(LOGOS).forEach(function (logo) {
+              track.appendChild(makeItem(logo));
+            });
+          })();
+          </script>
         </div>
       </div>
     </section>
