@@ -26,11 +26,9 @@
   <main>
     <section class="hero" aria-labelledby="hero-title">
       <div class="container hero-inner">
-        <p class="eyebrow">Draft alur self-serve Aseta · untuk review</p>
         <h1 id="hero-title">Cari tahu apa yang perlu dibenahi sebelum aset menghambat operasi.</h1>
         <p class="hero-copy">Identifikasi pain point, lihat kebutuhan fitur, dan hitung skenario dampaknya. Hasil ringkas baru dibuka setelah data Anda tercatat agar tim Aseta dapat menindaklanjutinya dengan konteks yang tepat.</p>
         <div class="hero-actions"><a class="button button-primary" href="#problem-form">Identifikasi kebutuhan <span aria-hidden="true">→</span></a><a class="button button-outline" href="#product-overview">Kenali Aseta</a></div>
-        <p class="hero-note">Preview draft: pengisian form belum dikirim ke server produksi.</p>
       </div>
     </section>
 
@@ -163,7 +161,7 @@
   (function () {
     function fitHeadings() {
       var desktop = window.innerWidth > 800;
-      document.querySelectorAll('h1, h2, h3').forEach(function (el) {
+      document.querySelectorAll('h1, h2, h3, .section-heading .muted').forEach(function (el) {
         el.style.fontSize = '';
         el.style.whiteSpace = '';
         if (!desktop) return;
