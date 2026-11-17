@@ -10,3 +10,5 @@
 .lead-consent input[type=checkbox]{width:auto;padding:0;border:0;background:none;flex:0 0 auto;margin-top:2px}.lead-consent span{flex:1}
 
 .start-card>div{min-width:0}.start-card .button{flex:0 0 auto;white-space:nowrap}
+
+@media(max-width:800px){.main-nav a:not(.button){padding:10px 4px}.main-nav{gap:4px}}

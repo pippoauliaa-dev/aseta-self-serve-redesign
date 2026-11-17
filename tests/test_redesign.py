@@ -63,6 +63,23 @@ class RedesignDraftTests(unittest.TestCase):
         self.assertEqual(self.page.locator("#implementation-target").get_attribute("required"), "")
         self.assertGreaterEqual(self.page.locator("#implementation-target option").count(), 4)
 
+    def test_mobile_menu_toggles_and_closes_after_navigation(self):
+        page = self.browser.new_page(viewport={"width": 390, "height": 844})
+        try:
+            page.goto(f"http://127.0.0.1:{self.server.server_port}/index.html")
+            toggle = page.locator(".menu-toggle")
+            nav = page.locator("#main-nav")
+            self.assertTrue(toggle.is_visible())
+            self.assertFalse(nav.is_visible())
+            toggle.click()
+            self.assertTrue(nav.is_visible())
+            self.assertEqual(toggle.get_attribute("aria-expanded"), "true")
+            nav.locator("a", has_text="Simulasi").click()
+            self.assertFalse(nav.is_visible())
+            self.assertEqual(page.evaluate("location.hash"), "#simulator")
+        finally:
+            page.close()
+
     def test_result_cta_opens_lead_form_before_result(self):
         self.page.locator("#result-gate").click()
         self.assertTrue(self.page.locator("#lead-dialog").evaluate("dialog => dialog.open"))

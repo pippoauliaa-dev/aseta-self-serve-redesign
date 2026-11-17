@@ -122,6 +122,34 @@
     $('#results').scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
   const dialog = $('#lead-dialog');
+  const menuToggle = $('.menu-toggle');
+  const mainNav = $('#main-nav');
+  const closeMenu = () => {
+    if (!mainNav || !menuToggle) return;
+    mainNav.classList.remove('open');
+    menuToggle.setAttribute('aria-expanded', 'false');
+    menuToggle.textContent = 'Menu';
+  };
+  if (menuToggle && mainNav) {
+    menuToggle.addEventListener('click', () => {
+      const open = mainNav.classList.toggle('open');
+      menuToggle.setAttribute('aria-expanded', String(open));
+      menuToggle.textContent = open ? 'Tutup' : 'Menu';
+    });
+    mainNav.addEventListener('click', (event) => {
+      if (event.target.closest('a')) closeMenu();
+    });
+    document.addEventListener('click', (event) => {
+      if (!mainNav.classList.contains('open') || event.target.closest('.nav-wrap')) return;
+      closeMenu();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeMenu();
+    });
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 800) closeMenu();
+    });
+  }
   $('#problem-identification-form').addEventListener('submit', (event) => {
     event.preventDefault();
     state.profile = getProfile();
