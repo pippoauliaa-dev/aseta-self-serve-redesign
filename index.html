@@ -42,7 +42,11 @@
         </div>
         <div class="social-proof" aria-label="Portofolio klien Aseta">
           <div class="social-proof-heading"><p class="eyebrow">Dipakai oleh tim dari berbagai sektor</p></div>
-          <div class="logo-marquee" tabindex="0"><div class="logo-track" id="logo-track"></div></div>
+          <div class="logo-wall" aria-label="Portofolio klien Aseta">
+            <div class="logo-row r1 left"><div class="logo-row-track" data-row="0"></div></div>
+            <div class="logo-row r2 right"><div class="logo-row-track" data-row="1"></div></div>
+            <div class="logo-row r3 left"><div class="logo-row-track" data-row="2"></div></div>
+          </div>
           <script>
           (function () {
             var LOGOS = [
@@ -70,8 +74,6 @@
               { name: 'Usaha Kita Sentosa', src: 'assets/logos/usaha-kita.png' },
               { name: 'CM Group', src: 'assets/logos/cm-group.png' }
             ];
-            var track = document.getElementById('logo-track');
-            if (!track) return;
             function makeItem(logo) {
               var img = document.createElement('img');
               img.src = logo.src;
@@ -84,8 +86,13 @@
               };
               return img;
             }
-            LOGOS.concat(LOGOS).forEach(function (logo) {
-              track.appendChild(makeItem(logo));
+            var chunks = [LOGOS.slice(0, 8), LOGOS.slice(8, 16), LOGOS.slice(16)];
+            document.querySelectorAll('.logo-row-track').forEach(function (track, i) {
+              var row = chunks[i] || [];
+              // 3 copies so the loop stays seamless even for a short row
+              row.concat(row).concat(row).forEach(function (logo) {
+                track.appendChild(makeItem(logo));
+              });
             });
           })();
           </script>
