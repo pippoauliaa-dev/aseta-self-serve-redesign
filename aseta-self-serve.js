@@ -86,6 +86,11 @@
     $('#compare-bars').hidden = !estimate;
     $('#delay-note').textContent = estimate ? `Setiap bulan menunda keputusan = ${fmtRp(annualLoss / 12)} tetap hilang.` : '';
     $('#delay-note').hidden = !estimate;
+    const liveSummary = $('#live-summary');
+    if (liveSummary) {
+      liveSummary.innerHTML = estimate ? `Perkiraan kerugian saat ini: <b>${fmtRp(annualLoss)}</b> per tahun` : '';
+      liveSummary.hidden = !estimate;
+    }
   };
   const updateProfileSummary = () => {
     const profile = getProfile();

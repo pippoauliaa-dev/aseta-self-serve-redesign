@@ -86,3 +86,6 @@
 .lead-dialog-card{position:relative}
 .lead-dialog-close:focus{outline:none}
 .lead-dialog-close:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:6px}
+
+.live-summary{margin:16px 0 0;padding:12px 16px;border-radius:9px;border:1px solid #c7daf7;background:var(--blue-soft);color:#1e3a6b;font-size:12.5px}
+.live-summary b{color:var(--navy);font-size:14px}
