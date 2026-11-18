@@ -465,7 +465,35 @@
     link.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
-  const buildWhatsAppMessage = (closing) => `Halo tim Aseta, saya sudah mengisi simulasi. Readiness score: ${state.score}. Rekomendasi: ${$('#recommendation-plan').textContent}. Rentang aset: ${assetRanges[state.profile.assetRange]?.label || '—'}. Fitur: ${state.features.map((id) => enterpriseFeatureLabels[id]).join(', ') || 'belum dipilih'}.${closing ? ` ${closing}` : ''}`;
+  const buildWhatsAppMessage = (closing) => {
+    const lead = state.lead || {};
+    const label = (selector) => $(selector)?.selectedOptions?.[0]?.textContent?.trim() || '';
+    const pains = Array.from(document.querySelectorAll('[name="pain_point"]:checked')).map((input) => input.closest('label')?.querySelector('b')?.textContent?.trim() || input.value);
+    const lines = [
+      'Halo tim Aseta, saya sudah mengisi simulasi.',
+      '',
+      `Nama: ${lead.name || '-'}`,
+      `Perusahaan: ${lead.company || '-'}`,
+      `Jabatan: ${lead.position || '-'}`,
+      `Email: ${lead.email || '-'}`,
+      '',
+      `Readiness score: ${state.score}`,
+      `Rekomendasi: ${$('#recommendation-plan').textContent}`,
+      '',
+      'PROFIL OPERASIONAL',
+      `Rentang aset: ${assetRanges[state.profile.assetRange]?.label || '-'}`,
+      `Jumlah lokasi: ${label('#profile-branches') || '-'}`,
+      `Sistem saat ini: ${label('#profile-system') || '-'}`,
+      `Target implementasi: ${label('#implementation-target') || '-'}`,
+      `Metode identifikasi: ${state.estimate?.method === 'rfid' ? 'RFID' : 'QR Code'}`,
+      '',
+      'KEBUTUHAN',
+      `Fitur: ${state.features.map((id) => enterpriseFeatureLabels[id]).join(', ') || 'belum dipilih'}`,
+      `Masalah utama: ${pains.join(', ') || 'belum dipilih'}`
+    ];
+    if (closing) lines.push('', closing);
+    return lines.join('\n');
+  };
   const whatsappUrl = (message) => `https://wa.me/6281217984959?text=${encodeURIComponent(message)}`;
   $('#download-result').addEventListener('click', async () => {
     const button = $('#download-result');
@@ -485,7 +513,7 @@
     const button = $('#whatsapp-result');
     const hint = $('#whatsapp-hint');
     const originalLabel = button.textContent;
-    const openChat = () => window.open(whatsappUrl(buildWhatsAppMessage('Ringkasan PDF sudah saya unduh dan akan saya lampirkan di chat ini.')), '_blank', 'noopener,noreferrer');
+    const openChat = () => window.open(whatsappUrl(buildWhatsAppMessage()), '_blank', 'noopener,noreferrer');
     const showHint = () => {
       if (!hint) return;
       hint.textContent = `PDF ${pdfFileName()} sudah diunduh. Di chat WhatsApp, ketuk ikon lampiran, pilih Dokumen, lalu pilih file itu.`;
