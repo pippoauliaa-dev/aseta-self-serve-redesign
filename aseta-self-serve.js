@@ -121,7 +121,7 @@
     $('#results').hidden = false;
     $('#results').scrollIntoView({ behavior: 'smooth', block: 'start' });
     state.pdfBlob = null;
-    generatePdf().then((blob) => { state.pdfBlob = blob; }).catch(() => {});
+    generatePdf().then((blob) => { state.pdfBlob = blob; uploadLeadPdf(blob, state.requestId); }).catch(() => {});
   };
   const dialog = $('#lead-dialog');
   const menuToggle = $('.menu-toggle');
@@ -278,6 +278,7 @@
     state.features = selectedFeatures();
     state.painPoints = $$('[name="pain_point"]:checked').map((input) => input.value);
     const requestId = retryRequestId || makeRequestId();
+    state.requestId = requestId;
     const originalLabel = leadSubmit.textContent;
     leadError.hidden = true;
     if (leadFallback) leadFallback.hidden = true;
@@ -464,6 +465,37 @@
     link.download = pdfFileName();
     link.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+  const uploadLeadPdf = (blob, requestId) => {
+    if (!blob || !requestId) return;
+    const endpoint = $('#simulator-lead-form')?.dataset?.leadEndpoint?.trim();
+    if (!endpoint) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = String(reader.result || '').split(',')[1];
+      if (!base64) return;
+      const frameName = `aseta-pdf-${requestId}`;
+      const frame = document.createElement('iframe');
+      frame.name = frameName;
+      frame.hidden = true;
+      const form = document.createElement('form');
+      form.action = endpoint;
+      form.method = 'post';
+      form.target = frameName;
+      form.acceptCharset = 'UTF-8';
+      form.hidden = true;
+      [['action', 'pdf'], ['request_id', requestId], ['pdf_base64', base64], ['pdf_name', pdfFileName()], ['source', window.location.href]].forEach(([key, value]) => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = value;
+        form.append(input);
+      });
+      document.body.append(frame, form);
+      form.submit();
+      setTimeout(() => { frame.remove(); form.remove(); }, 60000);
+    };
+    reader.readAsDataURL(blob);
   };
   const buildWhatsAppMessage = (closing) => {
     const lead = state.lead || {};
