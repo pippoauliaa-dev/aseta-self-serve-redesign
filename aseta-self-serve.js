@@ -287,7 +287,7 @@
     const originalLabel = leadSubmit.textContent;
     leadError.hidden = true;
     if (leadFallback) leadFallback.hidden = true;
-    leadSubmit.disabled = true;
+    leadSubmit.disabled = true; leadSubmit.classList.add('is-loading');
     leadSubmit.textContent = 'Menyimpan data…';
     try {
       await submitLeadToSheet(data, requestId);
@@ -316,7 +316,7 @@
         leadFallback.hidden = false;
       }
     } finally {
-      leadSubmit.disabled = false;
+      leadSubmit.disabled = false; leadSubmit.classList.remove('is-loading');
       leadSubmit.textContent = originalLabel;
     }
   });
@@ -550,14 +550,14 @@
   $('#download-result').addEventListener('click', async () => {
     const button = $('#download-result');
     const originalLabel = button.textContent;
-    button.disabled = true;
+    button.disabled = true; button.classList.add('is-loading');
     button.textContent = 'Menyiapkan PDF…';
     try {
       downloadPdf(state.pdfBlob || await generatePdf());
     } catch (error) {
       window.alert('PDF gagal dibuat. Silakan coba lagi.');
     } finally {
-      button.disabled = false;
+      button.disabled = false; button.classList.remove('is-loading');
       button.textContent = originalLabel;
     }
   });
@@ -579,7 +579,7 @@
       showHint();
       return;
     }
-    button.disabled = true;
+    button.disabled = true; button.classList.add('is-loading');
     button.textContent = 'Menyiapkan PDF…';
     try {
       const blob = await generatePdf();
@@ -590,7 +590,7 @@
     } catch (error) {
       window.alert('PDF gagal dibuat. Silakan coba lagi.');
     } finally {
-      button.disabled = false;
+      button.disabled = false; button.classList.remove('is-loading');
       button.textContent = originalLabel;
     }
   });
