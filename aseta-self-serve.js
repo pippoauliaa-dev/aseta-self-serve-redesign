@@ -432,7 +432,7 @@
     paragraph('Simulasi indikatif, bukan hasil aktual, jaminan penghematan, audit finansial, atau penawaran harga. Estimasi biaya dihitung dari acuan harga yang tersedia dan pilihan pengguna; validasi asumsi dan scope ke tim Aseta sebelum mengambil keputusan.', 92, 1712, 1056, 22, 14, colors.muted);
     text('Aseta · Kelola aset dengan data. Jaga operasi tetap berjalan.', 92, 1800, 15, colors.navy, 700);
 
-    const jpeg = Uint8Array.from(atob(canvas.toDataURL('image/jpeg', 0.94).split(',')[1]), (char) => char.charCodeAt(0));
+    const jpeg = Uint8Array.from(atob(canvas.toDataURL('image/jpeg', 0.8).split(',')[1]), (char) => char.charCodeAt(0));
     const encoder = new TextEncoder();
     const chunks = [];
     let length = 0;
@@ -457,7 +457,11 @@
     addText(`xref\n0 6\n0000000000 65535 f \n${offsets.slice(1).map((offset) => `${String(offset).padStart(10, '0')} 00000 n \n`).join('')}trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`);
     return new Blob(chunks, { type: 'application/pdf' });
   };
-  const pdfFileName = () => `aseta-ringkasan-kebutuhan-${new Date().toISOString().slice(0, 10)}.pdf`;
+  const pdfFileName = () => {
+    const company = String(state.lead?.company || '').trim();
+    const slug = company ? '-' + company.replace(/[^\w]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) : '';
+    return `aseta-ringkasan${slug}-${new Date().toISOString().slice(0, 10)}.pdf`;
+  };
   const downloadPdf = (blob) => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
