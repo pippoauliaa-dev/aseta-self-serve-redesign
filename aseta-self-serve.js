@@ -624,5 +624,21 @@
       button.textContent = originalLabel;
     }
   });
+  const stepLinks = $$('.step');
+  const stepSections = stepLinks.map((link) => document.getElementById(link.dataset.step));
+  const updateStep = () => {
+    const offset = 150;
+    let active = -1;
+    stepSections.forEach((section, index) => {
+      if (section && !section.hidden && section.getBoundingClientRect().top <= offset) active = index;
+    });
+    stepLinks.forEach((link, index) => {
+      link.classList.toggle('is-active', index === active);
+      link.classList.toggle('is-done', index < active);
+    });
+  };
+  window.addEventListener('scroll', updateStep, { passive: true });
+  window.addEventListener('resize', updateStep);
+  updateStep();
   syncHardwareOptions(); updateEstimate(); updateProfileSummary();
 })();
