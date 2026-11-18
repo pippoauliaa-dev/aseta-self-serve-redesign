@@ -303,7 +303,7 @@
         leadError.hidden = false;
         if (leadFallback) {
           leadFallback.href = `https://wa.me/6281217984959?text=${encodeURIComponent('Halo tim Aseta, saya sudah pernah mengisi simulasi dan ingin memperbarui data.')}`;
-          leadFallback.textContent = 'Hubungi tim Aseta via WhatsApp â†’';
+          leadFallback.textContent = 'Hubungi tim Aseta via WhatsApp \u2197';
           leadFallback.hidden = false;
         }
         return;
