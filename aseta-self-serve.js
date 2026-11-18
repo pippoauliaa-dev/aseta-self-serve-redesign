@@ -624,6 +624,7 @@
       button.textContent = originalLabel;
     }
   });
+  const stepBar = $('.step-bar');
   const stepLinks = $$('.step');
   const stepSections = stepLinks.map((link) => document.getElementById(link.dataset.step));
   const updateStep = () => {
@@ -636,6 +637,7 @@
       link.classList.toggle('is-active', index === active);
       link.classList.toggle('is-done', index < active);
     });
+    if (stepBar) stepBar.classList.toggle('is-visible', active >= 0);
   };
   window.addEventListener('scroll', updateStep, { passive: true });
   window.addEventListener('resize', updateStep);
