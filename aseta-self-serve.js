@@ -485,36 +485,29 @@
     const button = $('#whatsapp-result');
     const hint = $('#whatsapp-hint');
     const originalLabel = button.textContent;
-    const probe = new File([new Blob(['%PDF-'])], 'probe.pdf', { type: 'application/pdf' });
-    const canShareFile = !!navigator.canShare?.({ files: [probe] }) && window.matchMedia('(pointer: coarse)').matches;
+    const openChat = () => window.open(whatsappUrl(buildWhatsAppMessage('Ringkasan PDF sudah saya unduh dan akan saya lampirkan di chat ini.')), '_blank', 'noopener,noreferrer');
+    const showHint = () => {
+      if (!hint) return;
+      hint.textContent = `PDF ${pdfFileName()} sudah diunduh. Di chat WhatsApp, ketuk ikon lampiran, pilih Dokumen, lalu pilih file itu.`;
+      hint.hidden = false;
+    };
     if (hint) hint.hidden = true;
-    if (!canShareFile) {
-      // Desktop: buka WhatsApp lebih dulu agar tidak diblokir popup blocker, lalu unduh PDF untuk dilampirkan manual.
-      window.open(whatsappUrl(buildWhatsAppMessage()), '_blank', 'noopener,noreferrer');
-      if (hint) {
-        hint.textContent = 'Ringkasan PDF sedang diunduh. Lampirkan file itu di chat WhatsApp yang baru terbuka.';
-        hint.hidden = false;
-      }
+    if (state.pdfBlob) {
+      // Blob sudah siap: unduh dan buka chat sales dalam satu gesture agar tidak diblokir popup blocker.
+      downloadPdf(state.pdfBlob);
+      openChat();
+      showHint();
+      return;
     }
     button.disabled = true;
     button.textContent = 'Menyiapkan PDF…';
     try {
-      const blob = state.pdfBlob || await generatePdf();
+      const blob = await generatePdf();
       state.pdfBlob = blob;
-      if (canShareFile) {
-        try {
-          await navigator.share({ files: [new File([blob], pdfFileName(), { type: 'application/pdf' })], title: 'Ringkasan kebutuhan Aseta', text: buildWhatsAppMessage('Ringkasan PDF saya lampirkan di chat ini.') });
-        } catch (error) {
-          if (error.name !== 'AbortError') {
-            downloadPdf(blob);
-            window.open(whatsappUrl(buildWhatsAppMessage()), '_blank', 'noopener,noreferrer');
-          }
-        }
-      } else {
-        downloadPdf(blob);
-      }
+      downloadPdf(blob);
+      openChat();
+      showHint();
     } catch (error) {
-      if (hint) hint.hidden = true;
       window.alert('PDF gagal dibuat. Silakan coba lagi.');
     } finally {
       button.disabled = false;
