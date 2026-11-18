@@ -27,9 +27,9 @@
 
 .step-bar{position:fixed;left:50%;top:80px;z-index:20;width:max-content;max-width:calc(100vw - 24px);transform:translate(-50%,-160%);opacity:0;pointer-events:none;transition:transform .22s ease,opacity .22s ease}
 .step-bar.is-visible{transform:translate(-50%,0);opacity:1;pointer-events:auto}
-.step-bar-inner{display:flex;align-items:center;gap:4px;padding:6px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.97);box-shadow:0 10px 30px rgba(15,23,42,.16);backdrop-filter:blur(10px);overflow-x:auto;scrollbar-width:none}
+.step-bar-inner{display:flex;width:max-content;align-items:center;gap:4px;padding:6px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.97);box-shadow:0 10px 30px rgba(15,23,42,.16);backdrop-filter:blur(10px);overflow-x:auto;scrollbar-width:none}
 .step-bar-inner::-webkit-scrollbar{display:none}
-.step{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap;transition:background .18s ease,color .18s ease}
+.step{display:inline-flex;flex:0 0 auto;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap;transition:background .18s ease,color .18s ease}
 .step span{display:inline-flex;width:19px;height:19px;align-items:center;justify-content:center;border-radius:50%;background:var(--surface);color:var(--muted);font-size:10px;font-weight:700;transition:background .18s ease,color .18s ease}
 .step.is-done span{background:#c7daf7;color:var(--blue)}
 .step.is-active{background:var(--blue);color:#fff}
