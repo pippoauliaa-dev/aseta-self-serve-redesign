@@ -16,3 +16,5 @@
 .lead-fallback{display:block;text-align:center;font-size:12px;font-weight:700;color:var(--blue);text-decoration:underline}
 
 #whatsapp-hint{color:var(--blue);font-weight:600;margin:10px 0 0}
+
+.button.is-loading{pointer-events:none;opacity:.85}.button.is-loading::before{content:"";width:13px;height:13px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:aseta-spin .7s linear infinite}@keyframes aseta-spin{to{transform:rotate(360deg)}}
