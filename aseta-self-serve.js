@@ -272,7 +272,7 @@
     document.body.append(frame, form);
     form.submit();
   });
-  $('#result-gate').addEventListener('click', () => { leadError.hidden = true; if (leadFallback) leadFallback.hidden = true; dialog.showModal(); leadForm.querySelector('[name="name"]').focus(); });
+  $('#result-gate').addEventListener('click', () => { leadError.hidden = true; leadSubmit.hidden = false; if (leadFallback) { leadFallback.hidden = true; leadFallback.classList.remove('is-button'); } dialog.showModal(); leadForm.querySelector('[name="name"]').focus(); });
   $('[data-close-lead]').addEventListener('click', () => dialog.close());
   leadForm.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -301,9 +301,11 @@
         const when = error.duplicateAt ? new Date(error.duplicateAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
         leadError.textContent = `Nomor WhatsApp atau email ini sudah pernah mengisi simulasi${when ? ` pada ${when}` : ''}. Jika Anda ingin memperbarui data atau berdiskusi, hubungi tim Aseta.`;
         leadError.hidden = false;
+        leadSubmit.hidden = true;
         if (leadFallback) {
           leadFallback.href = `https://wa.me/6281217984959?text=${encodeURIComponent('Halo tim Aseta, saya sudah pernah mengisi simulasi dan ingin memperbarui data.')}`;
           leadFallback.textContent = 'Hubungi tim Aseta via WhatsApp \u2197';
+          leadFallback.classList.add('is-button');
           leadFallback.hidden = false;
         }
         return;
