@@ -366,11 +366,16 @@
       const logoH = 48;
       const logoW = logo.width * (logoH / logo.height);
       ctx.drawImage(logo, 92, 74, logoW, logoH);
-      text('ASSET & MAINTENANCE MANAGEMENT', 92 + logoW + 26, 105, 20, '#d9e5f7', 700);
+      const tagX = 92 + logoW + 26;
+      ctx.font = '700 20px Inter, Arial, sans-serif';
+      ctx.fillStyle = '#d9e5f7';
+      ctx.fillText('Solusi Tepat Kelola ', tagX, 105);
+      ctx.fillStyle = colors.gold;
+      ctx.fillText('Aset', tagX + ctx.measureText('Solusi Tepat Kelola ').width, 105);
     } else {
       roundRect(92, 70, 56, 56, 14, colors.gold);
       text('A', 110, 109, 34, colors.navy, 800);
-      text('ASETA  |  ASSET & MAINTENANCE MANAGEMENT', 170, 103, 20, '#d9e5f7', 700);
+      text('ASETA  |  SOLUSI TEPAT KELOLA ASET', 170, 103, 20, '#d9e5f7', 700);
     }
     text('Ringkasan Kebutuhan Sistem Aset', 92, 205, 46, colors.white, 700);
     text('Hasil identifikasi kebutuhan dan simulasi biaya', 92, 253, 27, '#d9e5f7', 400);
