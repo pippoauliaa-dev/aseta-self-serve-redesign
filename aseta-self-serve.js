@@ -222,6 +222,11 @@
       if (result?.type !== 'aseta-lead-result' || result.requestId !== requestId || result.attemptId !== attemptId) return;
       cleanup();
       if (result.status === 'success') { retryRequestId = ''; resolve(); }
+      else if (result.status === 'duplicate') {
+        const duplicateError = new Error('duplicate');
+        duplicateError.duplicateAt = result.existingAt || '';
+        reject(duplicateError);
+      }
       else reject(new Error('Data belum tersimpan di Google Sheets. Coba lagi.'));
     };
     frame.name = `aseta-lead-${attemptId}`;
@@ -292,6 +297,17 @@
       dialog.close();
       renderResults();
     } catch (error) {
+      if (error.duplicateAt !== undefined) {
+        const when = error.duplicateAt ? new Date(error.duplicateAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+        leadError.textContent = `Nomor WhatsApp atau email ini sudah pernah mengisi simulasi${when ? ` pada ${when}` : ''}. Jika Anda ingin memperbarui data atau berdiskusi, hubungi tim Aseta.`;
+        leadError.hidden = false;
+        if (leadFallback) {
+          leadFallback.href = `https://wa.me/6281217984959?text=${encodeURIComponent('Halo tim Aseta, saya sudah pernah mengisi simulasi dan ingin memperbarui data.')}`;
+          leadFallback.textContent = 'Hubungi tim Aseta via WhatsApp â†’';
+          leadFallback.hidden = false;
+        }
+        return;
+      }
       if (error.message.startsWith('Data belum tersimpan') || error.message.startsWith('Respons Google Sheets')) retryRequestId = requestId;
       leadError.textContent = error.message || 'Data belum berhasil disimpan. Silakan coba lagi.';
       leadError.hidden = false;
