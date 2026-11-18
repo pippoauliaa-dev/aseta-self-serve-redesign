@@ -274,16 +274,24 @@
   });
   $('#result-gate').addEventListener('click', () => {
     const gateHint = $('#gate-hint');
+    const assetField = $('#asset-range')?.closest('label');
+    const painGroup = $$('[name="pain_point"]')[0]?.closest('.choice-grid');
     const missing = [];
     if (!selectedAssetRange()) missing.push('rentang aset');
     if ($$('[name="pain_point"]:checked').length === 0) missing.push('minimal satu masalah utama');
     if (missing.length) {
+      if (assetField) assetField.classList.toggle('needs-attention', !selectedAssetRange());
+      if (painGroup) painGroup.classList.toggle('needs-attention', $$('[name="pain_point"]:checked').length === 0);
       if (gateHint) {
         gateHint.textContent = `Lengkapi dulu ${missing.join(' dan ')} sebelum melihat hasil.`;
         gateHint.hidden = false;
       }
+      const target = (!selectedAssetRange() && assetField) || painGroup;
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
+    if (assetField) assetField.classList.remove('needs-attention');
+    if (painGroup) painGroup.classList.remove('needs-attention');
     if (gateHint) gateHint.hidden = true;
     leadError.hidden = true;
     leadSubmit.hidden = false;
@@ -291,8 +299,8 @@
     dialog.showModal();
     leadForm.querySelector('[name="name"]').focus();
   });
-  ['#asset-range', '#asset-range-summary'].forEach((selector) => $(selector)?.addEventListener('change', () => { const hint = $('#gate-hint'); if (hint) hint.hidden = true; }));
-  $$('[name="pain_point"]').forEach((input) => input.addEventListener('change', () => { const hint = $('#gate-hint'); if (hint) hint.hidden = true; }));
+  ['#asset-range', '#asset-range-summary'].forEach((selector) => $(selector)?.addEventListener('change', () => { const hint = $('#gate-hint'); if (hint) hint.hidden = true; $('#asset-range')?.closest('label')?.classList.remove('needs-attention'); }));
+  $$('[name="pain_point"]').forEach((input) => input.addEventListener('change', () => { const hint = $('#gate-hint'); if (hint) hint.hidden = true; if ($$('[name="pain_point"]:checked').length) $$('[name="pain_point"]')[0]?.closest('.choice-grid')?.classList.remove('needs-attention'); }));
   $('[data-close-lead]').addEventListener('click', () => dialog.close());
   leadForm.addEventListener('submit', async (event) => {
     event.preventDefault();
