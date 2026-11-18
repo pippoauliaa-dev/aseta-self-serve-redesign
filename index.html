@@ -149,45 +149,7 @@
             <label class="feature-choice" data-enterprise-feature="cross-branch-approval"><input type="checkbox" value="cross-branch-approval"><span><b>Approval &amp; kontrol lintas cabang</b><small>Persetujuan mutasi dan kontrol aset multi-lokasi.</small></span></label>
             <label class="feature-choice" data-enterprise-feature="erp-integration"><input type="checkbox" value="erp-integration"><span><b>Integrasi accounting/ERP via API</b><small>Integrasi berdasarkan kebutuhan dan scope teknis yang dikonfirmasi.</small></span></label>
           </div></div>
-                    <div class="loss-panel" id="loss-panel">
-            <p class="loss-label">Tanpa sistem, potensi kerugian Anda per tahun</p>
-            <p class="loss-value" id="loss-value">—</p>
-            <p class="loss-month" id="loss-month">Lengkapi simulasi untuk melihat angka.</p>
-            <p class="loss-tail" id="loss-tail" hidden></p>
-          </div>
-          <div class="result-cards">
-            <div class="result-card is-hero">
-              <small>Yang bisa diselamatkan</small>
-              <strong id="saving-result">Rp0</strong>
-              <span class="result-card-note">per tahun</span>
-            </div>
-            <div class="result-card">
-              <small>Setiap Rp1 yang diinvestasikan</small>
-              <strong id="roi-result">—</strong>
-              <span class="result-card-note">dalam tahun pertama</span>
-            </div>
-            <div class="result-card">
-              <small>Untung bersih setelah biaya sistem</small>
-              <strong id="net-benefit-result">—</strong>
-              <span class="result-card-note">di tahun pertama</span>
-            </div>
-          </div>
-          <div class="compare-bars" id="compare-bars" hidden>
-            <h3>Perbandingan setahun</h3>
-            <div class="bar-row">
-              <span>Tanpa Aseta</span>
-              <span class="bar-track"><span class="bar-fill is-loss" id="bar-loss"></span></span>
-              <span class="bar-val" id="bar-loss-val">—</span>
-            </div>
-            <div class="bar-row">
-              <span>Dengan Aseta</span>
-              <span class="bar-track"><span class="bar-fill is-save" id="bar-save"></span></span>
-              <span class="bar-val" id="bar-save-val">—</span>
-            </div>
-          </div>
-          <p class="delay-note" id="delay-note" hidden></p>
-          <p class="calc-footnote">Angka bersifat indikatif dari simulasi Anda, bukan penawaran harga.</p>
-          <button class="button button-primary" type="button" id="result-gate">Lihat hasil &amp; readiness score <span aria-hidden="true">→</span></button>
+                    <button class="button button-primary" type="button" id="result-gate">Lihat hasil &amp; readiness score <span aria-hidden="true">→</span></button>
           <p class="lead-error" id="gate-hint" role="alert" hidden></p>
         </div><aside class="calc-side"><h3>Bagaimana hasil ini dipakai?</h3><ol><li>Jawaban pain point membantu memetakan kebutuhan prioritas.</li><li>Pilihan fitur menunjukkan scope yang perlu dibahas bersama Sales.</li><li>Readiness score hanya mengatur prioritas follow-up, bukan menilai kelayakan bisnis Anda.</li></ol><div class="disclosure"><b>Transparansi Enterprise</b><p>Enterprise adalah rekomendasi saat kebutuhan lifecycle, maintenance, governance, atau integrasi melampaui Essentials. Detail paket, add-on, harga, dan implementasi dikonfirmasi bersama tim Aseta.</p></div></aside></div>
       </div>
@@ -201,7 +163,71 @@
     <section class="section start-section" id="mulai"><div class="container start-card"><div><p class="eyebrow">Siap berdiskusi?</p><h2>Validasi Kebutuhan Sistem Aset Perusahaan Anda Hari Ini.</h2><p>Hasilkan dokumen analisis kebutuhan instan untuk diselaraskan dengan internal tim Anda. Hubungi tim kami kapan pun Anda membutuhkan asesmen teknis mendalam.</p></div><a class="button button-primary" href="https://wa.me/6281217984959?text=Halo%20tim%20Aseta%2C%20saya%20ingin%20berkonsultasi%20mengenai%20kebutuhan%20sistem%20aset%20perusahaan%20saya." target="_blank" rel="noopener noreferrer">Konsultasikan Kebutuhan Anda →</a></div></section>
   </main>
 
-  <dialog class="lead-dialog" id="lead-dialog" aria-labelledby="lead-dialog-title"><div class="lead-dialog-card"><form id="simulator-lead-form" data-lead-endpoint="https://script.google.com/macros/s/AKfycbyS-fF32WN1p5ABcmtoMXwPHJQ0CSRUcwUJlitf-MjEbvNNF7LIDw_f78IwKXFz9COhZA/exec"><button class="lead-dialog-close" type="button" data-close-lead aria-label="Tutup form">×</button><p class="eyebrow">Sebelum membuka hasil</p><h3 id="lead-dialog-title">Simpan ringkasan kebutuhan Anda</h3><p>Data ini masuk ke bank leads agar tim Aseta dapat menghubungi Anda dengan konteks yang sudah Anda isi. WhatsApp tidak wajib dikirim.</p><label>Nama lengkap<input name="name" type="text" autocomplete="name" required></label><label>Email perusahaan<input name="email" type="email" autocomplete="email" required></label><label>Nama perusahaan<input name="company" type="text" autocomplete="organization" required></label><label>Jabatan<input name="position" type="text" autocomplete="organization-title" required></label><label>Nomor WhatsApp<div class="lead-phone-field"><span aria-hidden="true">+62</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="812 3456 7890" required></div></label><label class="lead-consent"><input name="consent" type="checkbox" required><span>Saya setuju data ini digunakan tim Aseta untuk menghubungi saya terkait hasil simulasi dan kebutuhan pengelolaan aset.</span></label><p class="lead-error" id="lead-error" role="alert" hidden></p><a class="lead-fallback" id="lead-fallback" href="#" target="_blank" rel="noopener noreferrer" hidden>Kirim ringkasan via WhatsApp →</a><button class="button button-primary" id="lead-submit" type="submit">Simpan &amp; buka hasil</button></form></div></dialog>
+    <dialog class="lead-dialog" id="lead-dialog" aria-labelledby="lead-dialog-title">
+    <div class="lead-dialog-card">
+      <button class="lead-dialog-close" type="button" data-close-lead aria-label="Tutup form">&times;</button>
+      <div class="lead-dialog-grid">
+        <div class="lead-dialog-result">
+          <p class="eyebrow">Simulasi Anda</p>
+          <div class="loss-panel" id="loss-panel">
+            <p class="loss-label">Tanpa sistem, potensi kerugian Anda per tahun</p>
+            <p class="loss-value" id="loss-value">&mdash;</p>
+            <p class="loss-month" id="loss-month">Lengkapi simulasi untuk melihat angka.</p>
+            <p class="loss-tail" id="loss-tail" hidden></p>
+          </div>
+          <div class="result-cards">
+            <div class="result-card is-hero">
+              <small>Yang bisa diselamatkan</small>
+              <strong id="saving-result">&mdash;</strong>
+              <span class="result-card-note">per tahun</span>
+            </div>
+            <div class="result-card">
+              <small>Setiap Rp1 yang diinvestasikan</small>
+              <strong id="roi-result">&mdash;</strong>
+              <span class="result-card-note">dalam tahun pertama</span>
+            </div>
+            <div class="result-card">
+              <small>Untung bersih setelah biaya sistem</small>
+              <strong id="net-benefit-result">&mdash;</strong>
+              <span class="result-card-note">di tahun pertama</span>
+            </div>
+          </div>
+          <div class="compare-bars" id="compare-bars" hidden>
+            <h3>Perbandingan setahun</h3>
+            <div class="bar-row">
+              <span>Tanpa Aseta</span>
+              <span class="bar-track"><span class="bar-fill is-loss" id="bar-loss"></span></span>
+              <span class="bar-val" id="bar-loss-val">&mdash;</span>
+            </div>
+            <div class="bar-row">
+              <span>Dengan Aseta</span>
+              <span class="bar-track"><span class="bar-fill is-save" id="bar-save"></span></span>
+              <span class="bar-val" id="bar-save-val">&mdash;</span>
+            </div>
+          </div>
+          <p class="delay-note" id="delay-note" hidden></p>
+          <p class="calc-footnote">Angka bersifat indikatif dari simulasi Anda, bukan penawaran harga.</p>
+        </div>
+        <div class="lead-dialog-form-wrap">
+          <form id="simulator-lead-form" data-lead-endpoint="https://script.google.com/macros/s/AKfycbyS-fF32WN1p5ABcmtoMXwPHJQ0CSRUcwUJlitf-MjEbvNNF7LIDw_f78IwKXFz9COhZA/exec">
+            <p class="eyebrow">Sebelum membuka hasil</p>
+            <h3 id="lead-dialog-title">Buka hasil lengkap</h3>
+            <p>Isi data singkat ini supaya hasil simulasi bisa kami siapkan dan tim Aseta bisa menindaklanjuti dengan konteks yang tepat.</p>
+            <label>Nama lengkap<input name="name" type="text" autocomplete="name" required></label>
+            <label>Email perusahaan<input name="email" type="email" autocomplete="email" required></label>
+            <label>Nama perusahaan<input name="company" type="text" autocomplete="organization" required></label>
+            <label>Jabatan<input name="position" type="text" autocomplete="organization-title" required></label>
+            <label>Nomor WhatsApp<div class="lead-phone-field"><span aria-hidden="true">+62</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="812 3456 7890" required></div></label>
+            <label class="lead-consent"><input name="consent" type="checkbox" required><span>Saya setuju data ini digunakan tim Aseta untuk menghubungi saya terkait hasil simulasi dan kebutuhan pengelolaan aset.</span></label>
+            <p class="lead-error" id="lead-error" role="alert" hidden></p>
+            <a class="lead-fallback" id="lead-fallback" href="#" target="_blank" rel="noopener noreferrer" hidden>Kirim ringkasan via WhatsApp &rarr;</a>
+            <button class="button button-primary" id="lead-submit" type="submit">Buka hasil lengkap</button>
+            <p class="lead-trust">Gratis &middot; tanpa komitmen &middot; data tidak dibagikan</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </dialog>
   <footer class="site-footer"><div class="container footer-grid"><div><a class="brand" href="#top"><img src="assets/aseta-brand-logo.png" alt="Aseta"></a><p>Asset &amp; maintenance management untuk tim yang ingin bekerja lebih terencana.</p></div><nav aria-label="Tautan footer"><a href="https://aseta.id/harga.html">Paket</a><a href="https://aseta.id/tentang_kami.html">Tentang Kami</a><a href="https://aseta.id/hubungi_kami.html">Hubungi Kami</a></nav><div><p>© Aseta · PT Nuansa Cerah Informasi</p></div></div></footer>
   <script>
   (function () {
