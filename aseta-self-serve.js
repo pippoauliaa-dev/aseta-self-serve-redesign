@@ -22,7 +22,7 @@
     'cross-branch-approval': 'Approval & kontrol lintas cabang',
     'erp-integration': 'Integrasi accounting/ERP via API'
   };
-  const state = { profile: {}, painPoints: [], features: [], estimate: null, score: 0, lead: null };
+  const state = { profile: {}, painPoints: [], features: [], estimate: null, score: 0, lead: null, pdfBlob: null };
   const selectedFeatures = () => $$('.feature-choice input:checked').map((input) => input.value);
   const selectedAssetRange = () => $('#asset-range')?.value || $('#asset-range-summary')?.value || '';
   const getProfile = () => ({
@@ -120,6 +120,8 @@
     $('#result-feature-summary').textContent = state.features.length ? `Kapabilitas yang dipilih: ${state.features.map((id) => enterpriseFeatureLabels[id]).join('; ')}.` : 'Belum ada kapabilitas Enterprise yang dipilih.';
     $('#results').hidden = false;
     $('#results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    state.pdfBlob = null;
+    generatePdf().then((blob) => { state.pdfBlob = blob; }).catch(() => {});
   };
   const dialog = $('#lead-dialog');
   const menuToggle = $('.menu-toggle');
@@ -454,19 +456,24 @@
     addText(`xref\n0 6\n0000000000 65535 f \n${offsets.slice(1).map((offset) => `${String(offset).padStart(10, '0')} 00000 n \n`).join('')}trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`);
     return new Blob(chunks, { type: 'application/pdf' });
   };
+  const pdfFileName = () => `aseta-ringkasan-kebutuhan-${new Date().toISOString().slice(0, 10)}.pdf`;
+  const downloadPdf = (blob) => {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = pdfFileName();
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+  const buildWhatsAppMessage = (closing) => `Halo tim Aseta, saya sudah mengisi simulasi. Readiness score: ${state.score}. Rekomendasi: ${$('#recommendation-plan').textContent}. Rentang aset: ${assetRanges[state.profile.assetRange]?.label || '—'}. Fitur: ${state.features.map((id) => enterpriseFeatureLabels[id]).join(', ') || 'belum dipilih'}.${closing ? ` ${closing}` : ''}`;
+  const whatsappUrl = (message) => `https://wa.me/6281217984959?text=${encodeURIComponent(message)}`;
   $('#download-result').addEventListener('click', async () => {
     const button = $('#download-result');
     const originalLabel = button.textContent;
     button.disabled = true;
     button.textContent = 'Menyiapkan PDF…';
     try {
-      const pdf = await generatePdf();
-      const url = URL.createObjectURL(pdf);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `aseta-ringkasan-kebutuhan-${new Date().toISOString().slice(0, 10)}.pdf`;
-      link.click();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      downloadPdf(state.pdfBlob || await generatePdf());
     } catch (error) {
       window.alert('PDF gagal dibuat. Silakan coba lagi.');
     } finally {
@@ -474,9 +481,45 @@
       button.textContent = originalLabel;
     }
   });
-  $('#whatsapp-result').addEventListener('click', () => {
-    const message = `Halo tim Aseta, saya sudah mengisi simulasi. Readiness score: ${state.score}. Rekomendasi: ${$('#recommendation-plan').textContent}. Rentang aset: ${assetRanges[state.profile.assetRange]?.label || '—'}. Fitur: ${state.features.map((id) => enterpriseFeatureLabels[id]).join(', ') || 'belum dipilih'}.`;
-    window.open(`https://wa.me/6281217984959?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
+  $('#whatsapp-result').addEventListener('click', async () => {
+    const button = $('#whatsapp-result');
+    const hint = $('#whatsapp-hint');
+    const originalLabel = button.textContent;
+    const probe = new File([new Blob(['%PDF-'])], 'probe.pdf', { type: 'application/pdf' });
+    const canShareFile = !!navigator.canShare?.({ files: [probe] }) && window.matchMedia('(pointer: coarse)').matches;
+    if (hint) hint.hidden = true;
+    if (!canShareFile) {
+      // Desktop: buka WhatsApp lebih dulu agar tidak diblokir popup blocker, lalu unduh PDF untuk dilampirkan manual.
+      window.open(whatsappUrl(buildWhatsAppMessage()), '_blank', 'noopener,noreferrer');
+      if (hint) {
+        hint.textContent = 'Ringkasan PDF sedang diunduh. Lampirkan file itu di chat WhatsApp yang baru terbuka.';
+        hint.hidden = false;
+      }
+    }
+    button.disabled = true;
+    button.textContent = 'Menyiapkan PDF…';
+    try {
+      const blob = state.pdfBlob || await generatePdf();
+      state.pdfBlob = blob;
+      if (canShareFile) {
+        try {
+          await navigator.share({ files: [new File([blob], pdfFileName(), { type: 'application/pdf' })], title: 'Ringkasan kebutuhan Aseta', text: buildWhatsAppMessage('Ringkasan PDF saya lampirkan di chat ini.') });
+        } catch (error) {
+          if (error.name !== 'AbortError') {
+            downloadPdf(blob);
+            window.open(whatsappUrl(buildWhatsAppMessage()), '_blank', 'noopener,noreferrer');
+          }
+        }
+      } else {
+        downloadPdf(blob);
+      }
+    } catch (error) {
+      if (hint) hint.hidden = true;
+      window.alert('PDF gagal dibuat. Silakan coba lagi.');
+    } finally {
+      button.disabled = false;
+      button.textContent = originalLabel;
+    }
   });
   syncHardwareOptions(); updateEstimate(); updateProfileSummary();
 })();

@@ -117,6 +117,26 @@ class RedesignDraftTests(unittest.TestCase):
         with open(download.value.path(), "rb") as handle:
             self.assertEqual(handle.read(5), b"%PDF-")
 
+    def test_whatsapp_result_opens_chat_and_downloads_pdf(self):
+        endpoint = f"http://127.0.0.1:{self.server.server_port}/lead"
+        self.page.evaluate("url => document.querySelector('#simulator-lead-form').dataset.leadEndpoint = url", endpoint)
+        self.page.locator("#asset-range-summary").select_option("200-499")
+        self.page.locator("#result-gate").click()
+        self.page.locator('#simulator-lead-form [name="name"]').fill("Uji Coba")
+        self.page.locator('#simulator-lead-form [name="email"]').fill("uji@example.com")
+        self.page.locator('#simulator-lead-form [name="company"]').fill("PT Uji")
+        self.page.locator('#simulator-lead-form [name="position"]').fill("QA")
+        self.page.locator('#simulator-lead-form [name="phone"]').fill("081234567890")
+        self.page.locator('#simulator-lead-form [name="consent"]').check()
+        self.page.locator("#lead-submit").click()
+        self.page.wait_for_selector("#results:not([hidden])", timeout=5000)
+        with self.page.expect_popup() as popup_info, self.page.expect_download() as download_info:
+            self.page.locator("#whatsapp-result").click()
+        self.assertIn("6281217984959", popup_info.value.url)
+        with open(download_info.value.path(), "rb") as handle:
+            self.assertEqual(handle.read(5), b"%PDF-")
+        self.assertFalse(self.page.locator("#whatsapp-hint").is_hidden())
+
     def test_mobile_menu_toggles_and_closes_after_navigation(self):
         page = self.browser.new_page(viewport={"width": 390, "height": 844})
         try:
