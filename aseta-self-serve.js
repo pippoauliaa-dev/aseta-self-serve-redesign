@@ -368,7 +368,7 @@
       ctx.drawImage(logo, 92, 74, logoW, logoH);
       const tagX = 92 + logoW + 26;
       ctx.font = '700 20px Inter, Arial, sans-serif';
-      ctx.fillStyle = '#d9e5f7';
+      ctx.fillStyle = colors.white;
       ctx.fillText('Solusi Tepat Kelola ', tagX, 105);
       ctx.fillStyle = colors.gold;
       ctx.fillText('Aset', tagX + ctx.measureText('Solusi Tepat Kelola ').width, 105);
