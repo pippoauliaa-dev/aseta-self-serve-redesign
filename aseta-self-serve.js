@@ -67,24 +67,25 @@
     const estimate = estimateRange();
     state.estimate = estimate;
     const selectedRange = estimate?.range;
-    $('#investment-output').textContent = estimate ? `Kisaran ${fmtRp(estimate.low)}–${fmtRp(estimate.high)}` : 'Pilih rentang aset';
-    const method = $('#subscription-type')?.value || 'qr';
-    const methodLabel = method === 'rfid' ? 'RFID' : 'QR Code';
-    const hardwareSelected = method === 'rfid' ? $('#rfid-hardware')?.checked : $('#qr-hardware')?.checked;
-    const subscriptionLabel = estimate
-      ? `langganan ${fmtRp(estimate.range.subscription[method][0] * 12)}–${fmtRp(estimate.range.subscription[method][1] * 12)}/tahun`
-      : '';
-    const hardwareLabel = estimate && hardwareSelected
-      ? `hardware ${methodLabel} Aseta disertakan (${fmtRp(estimate.hardware[0])}–${fmtRp(estimate.hardware[1])})`
-      : `hardware ${methodLabel} tidak disertakan`;
-    $('#investment-breakdown').textContent = estimate
-      ? `${methodLabel}; ${subscriptionLabel}; ${hardwareLabel}; ${estimate.features.length} kapabilitas Enterprise dipilih (${estimate.features.map((id) => enterpriseFeatureLabels[id]).join(', ') || 'tidak ada'}).`
-      : 'Pilih rentang aset dan kapabilitas untuk melihat kisaran.';
-    $('#enterprise-features-output').textContent = `${estimate?.features.length || 0} fitur dipilih`;
-    $('#saving-result').textContent = estimate ? fmtRp(estimate.annualSaving) : 'Rp0';
     const mid = estimate ? (estimate.low + estimate.high) / 2 : 0;
-    $('#net-benefit-result').textContent = estimate && estimate.annualSaving ? fmtRp(estimate.annualSaving - mid) : '—';
-    $('#roi-result').textContent = estimate && mid ? `${Math.round((estimate.annualSaving - mid) / mid * 100).toLocaleString('id-ID')}%` : '—';
+    const annualLoss = estimate ? estimate.annualLoss : 0;
+    const annualSaving = estimate ? estimate.annualSaving : 0;
+    const netBenefit = estimate && annualSaving ? annualSaving - mid : 0;
+    const recoveryRatio = estimate && mid ? annualSaving / mid : 0;
+    const remainingLoss = Math.max(annualLoss - annualSaving, 0);
+    $('#loss-value').textContent = estimate ? fmtRp(annualLoss) : '—';
+    $('#loss-month').innerHTML = estimate ? `≈ <b>${fmtRp(annualLoss / 12)}</b> bocor setiap bulan` : 'Lengkapi simulasi untuk melihat angka.';
+    $('#loss-tail').textContent = estimate ? `Dengan target pengurangan ${estimate.reduce}%, sebagian kebocoran ini bisa ditekan.` : '';
+    $('#loss-tail').hidden = !estimate;
+    $('#saving-result').textContent = estimate ? fmtRp(annualSaving) : '—';
+    $('#roi-result').textContent = estimate && mid ? `Kembali ${fmtRp(recoveryRatio)}` : '—';
+    $('#net-benefit-result').textContent = estimate && annualSaving ? fmtRp(netBenefit) : '—';
+    $('#bar-loss-val').textContent = estimate ? `${fmtRp(annualLoss)} hilang` : '—';
+    $('#bar-save-val').textContent = estimate ? `${fmtRp(remainingLoss)} tersisa` : '—';
+    $('#bar-save').style.width = estimate && annualLoss ? `${Math.max(0, Math.min(100, remainingLoss / annualLoss * 100))}%` : '0%';
+    $('#compare-bars').hidden = !estimate;
+    $('#delay-note').textContent = estimate ? `Setiap bulan menunda keputusan = ${fmtRp(annualLoss / 12)} tetap hilang.` : '';
+    $('#delay-note').hidden = !estimate;
   };
   const updateProfileSummary = () => {
     const profile = getProfile();
