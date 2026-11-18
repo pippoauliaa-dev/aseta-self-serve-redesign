@@ -272,7 +272,27 @@
     document.body.append(frame, form);
     form.submit();
   });
-  $('#result-gate').addEventListener('click', () => { leadError.hidden = true; leadSubmit.hidden = false; if (leadFallback) { leadFallback.hidden = true; leadFallback.classList.remove('is-button'); } dialog.showModal(); leadForm.querySelector('[name="name"]').focus(); });
+  $('#result-gate').addEventListener('click', () => {
+    const gateHint = $('#gate-hint');
+    const missing = [];
+    if (!selectedAssetRange()) missing.push('rentang aset');
+    if ($$('[name="pain_point"]:checked').length === 0) missing.push('minimal satu masalah utama');
+    if (missing.length) {
+      if (gateHint) {
+        gateHint.textContent = `Lengkapi dulu ${missing.join(' dan ')} sebelum melihat hasil.`;
+        gateHint.hidden = false;
+      }
+      return;
+    }
+    if (gateHint) gateHint.hidden = true;
+    leadError.hidden = true;
+    leadSubmit.hidden = false;
+    if (leadFallback) { leadFallback.hidden = true; leadFallback.classList.remove('is-button'); }
+    dialog.showModal();
+    leadForm.querySelector('[name="name"]').focus();
+  });
+  ['#asset-range', '#asset-range-summary'].forEach((selector) => $(selector)?.addEventListener('change', () => { const hint = $('#gate-hint'); if (hint) hint.hidden = true; }));
+  $$('[name="pain_point"]').forEach((input) => input.addEventListener('change', () => { const hint = $('#gate-hint'); if (hint) hint.hidden = true; }));
   $('[data-close-lead]').addEventListener('click', () => dialog.close());
   leadForm.addEventListener('submit', async (event) => {
     event.preventDefault();
