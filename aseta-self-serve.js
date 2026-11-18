@@ -356,9 +356,22 @@
     ctx.fillRect(0, 0, 1240, 390);
     ctx.fillStyle = colors.gold;
     ctx.fillRect(0, 386, canvas.width, 6);
-    roundRect(92, 70, 56, 56, 14, colors.gold);
-    text('A', 110, 109, 34, colors.navy, 800);
-    text('ASETA  |  ASSET & MAINTENANCE MANAGEMENT', 170, 103, 20, '#d9e5f7', 700);
+    const logo = await new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => resolve(null);
+      img.src = 'assets/aseta-logo-white.png';
+    });
+    if (logo) {
+      const logoH = 48;
+      const logoW = logo.width * (logoH / logo.height);
+      ctx.drawImage(logo, 92, 74, logoW, logoH);
+      text('ASSET & MAINTENANCE MANAGEMENT', 92 + logoW + 26, 105, 20, '#d9e5f7', 700);
+    } else {
+      roundRect(92, 70, 56, 56, 14, colors.gold);
+      text('A', 110, 109, 34, colors.navy, 800);
+      text('ASETA  |  ASSET & MAINTENANCE MANAGEMENT', 170, 103, 20, '#d9e5f7', 700);
+    }
     text('Ringkasan Kebutuhan Sistem Aset', 92, 205, 46, colors.white, 700);
     text('Hasil identifikasi kebutuhan dan simulasi biaya', 92, 253, 27, '#d9e5f7', 400);
     text(`Dibuat ${date}`, 92, 322, 20, '#d9e5f7', 400);
