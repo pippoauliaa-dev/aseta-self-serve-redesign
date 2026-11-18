@@ -34,5 +34,5 @@
 .step.is-done span{background:#c7daf7;color:var(--blue)}
 .step.is-active{background:var(--blue);color:#fff}
 .step.is-active span{background:rgba(255,255,255,.24);color:#fff}
-@media(max-width:800px){.step-bar{top:70px}.step{padding:7px 11px;font-size:11px;gap:6px}}
+@media(max-width:800px){.step-bar{top:70px;width:calc(100vw - 24px)}.step-bar-inner{width:100%;justify-content:space-between}.step{padding:7px 8px;font-size:11px;gap:5px;flex:1;justify-content:center}}
 @media(prefers-reduced-motion:reduce){.step-bar{transition:none}}
