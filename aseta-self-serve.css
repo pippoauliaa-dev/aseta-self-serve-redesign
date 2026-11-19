@@ -25,6 +25,9 @@
 
 
 
+.build-notice{background:#fffaeb;border-bottom:1px solid #f4dfaa;color:#7a4b00;text-align:center;padding:9px 18px;font-size:12.5px;font-weight:600;line-height:1.5}
+@media (max-width:640px){.build-notice{font-size:12px;padding:8px 14px}}
+
 .step-bar{position:fixed;left:50%;top:80px;z-index:20;width:max-content;max-width:calc(100vw - 24px);transform:translate(-50%,-160%);opacity:0;pointer-events:none;transition:transform .22s ease,opacity .22s ease}
 .step-bar.is-visible{transform:translate(-50%,0);opacity:1;pointer-events:auto}
 .step-bar-inner{display:flex;width:max-content;align-items:center;gap:4px;padding:6px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.97);box-shadow:0 10px 30px rgba(15,23,42,.16);backdrop-filter:blur(10px);overflow-x:auto;scrollbar-width:none}
