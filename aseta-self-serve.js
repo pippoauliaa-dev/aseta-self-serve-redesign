@@ -342,7 +342,7 @@
     leadForm.querySelector('[name="name"]').focus();
   });
   ['#asset-range', '#asset-range-summary'].forEach((selector) => $(selector)?.addEventListener('change', () => { const hint = $('#gate-hint'); if (hint) hint.hidden = true; $('#asset-range')?.closest('label')?.classList.remove('needs-attention'); }));
-  $$('[name="pain_point"]').forEach((input) => input.addEventListener('change', () => { const hint = $('#gate-hint'); if (hint) hint.hidden = true; if ($$('[name="pain_point"]:checked').length) $$('[name="pain_point"]')[0]?.closest('.choice-grid')?.classList.remove('needs-attention'); }));
+  $$('[name="pain_point"]').forEach((input) => input.addEventListener('change', () => { const hint = $('#gate-hint'); if (hint) hint.hidden = true; if ($$('[name="pain_point"]:checked').length) $$('[name="pain_point"]')[0]?.closest('.choice-grid')?.classList.remove('needs-attention'); renderDiagnosis(); }));
   $('[data-close-lead]').addEventListener('click', () => dialog.close());
   leadForm.addEventListener('submit', async (event) => {
     event.preventDefault();
