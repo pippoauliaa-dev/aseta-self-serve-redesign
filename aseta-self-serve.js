@@ -134,7 +134,7 @@
     state.features = selectedFeatures();
     const enterprise = state.features.length > 0 || state.painPoints.includes('maintenance-reaktif') || state.painPoints.includes('laporan-keuangan');
     const scoreLabel = state.score >= 70 ? 'Prioritas tinggi' : state.score >= 40 ? 'Perlu ditindaklanjuti' : 'Masih eksplorasi';
-    const scoreReason = `${state.painPoints.length} pain point, ${state.features.length} kapabilitas Enterprise dipilih, dan target implementasi ${$('#implementation-target option:checked')?.textContent || 'belum dipilih'}.`;
+    const scoreReason = 'Skor ini merangkum urgensi, kompleksitas, dan target implementasi untuk membantu tim Aseta menindaklanjuti kebutuhan Anda.';
     $('#readiness-score').textContent = state.score;
     $('#readiness-label').textContent = scoreLabel;
     $('#readiness-reason').textContent = scoreReason;
@@ -220,7 +220,7 @@
       estimate ? `Rentang aset: ${estimate.range.label}` : '',
       estimate ? `Estimasi biaya tahun pertama: ${fmtRp(estimate.low)}–${fmtRp(estimate.high)}` : '',
       estimate ? `Potensi biaya terhindarkan: ${fmtRp(estimate.annualSaving)}` : '',
-      `Readiness score: ${calculateScore()}`
+      `Prioritas tindak lanjut: ${calculateScore()}/100`
     ].filter(Boolean).join('\n');
   };
   const submitLeadToSheet = (data, requestId) => new Promise((resolve, reject) => {
@@ -450,7 +450,7 @@
     text('HASIL UTAMA', 92, 454, 18, colors.blue, 700);
     roundRect(92, 482, 506, 218, 18, colors.pale, colors.line);
     roundRect(620, 482, 528, 218, 18, '#fff9e9', '#f4dfaa');
-    text('Readiness score', 122, 535, 19, colors.muted, 500);
+    text('Prioritas tindak lanjut', 122, 535, 19, colors.muted, 500);
     text(String(state.score), 122, 610, 64, colors.blue, 800);
     text($('#readiness-label').textContent, 122, 650, 20, colors.ink, 700);
     text('Rekomendasi', 650, 535, 19, colors.muted, 500);
@@ -576,7 +576,7 @@
       `Jabatan: ${lead.position || '-'}`,
       `Email: ${lead.email || '-'}`,
       '',
-      `Readiness score: ${state.score}`,
+      `Prioritas tindak lanjut: ${state.score}/100`,
       `Rekomendasi: ${$('#recommendation-plan').textContent}`,
       '',
       'PROFIL OPERASIONAL',
