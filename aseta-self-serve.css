@@ -102,3 +102,6 @@
 .diag-solution{border-color:#bfe0cd;background:var(--green-soft)}
 .diag-solution h4{color:var(--green)}
 .diag-empty{list-style:none;margin-left:-16px;color:var(--muted);font-style:italic}
+
+.calc-formula{margin:18px 0 0;padding:12px 14px;border-left:3px solid var(--line);background:var(--surface);color:var(--muted);font-size:11px;line-height:1.55}
+.calc-formula b{color:var(--ink)}
