@@ -64,37 +64,18 @@
     $('#dtcost-output').textContent = fmtRp(costPerHour);
     $('#repair-output').textContent = fmtRp(repair);
     $('#reduce-output').textContent = `${reduce}%`;
-    const estimate = estimateRange();
-    state.estimate = estimate;
-    const selectedRange = estimate?.range;
-    const mid = estimate ? (estimate.low + estimate.high) / 2 : 0;
-    const annualLoss = estimate ? estimate.annualLoss : 0;
-    const annualSaving = estimate ? estimate.annualSaving : 0;
-    const netBenefit = estimate && annualSaving ? annualSaving - mid : 0;
-    const recoveryRatio = estimate && mid ? annualSaving / mid : 0;
-    const remainingLoss = Math.max(annualLoss - annualSaving, 0);
-    const setText = (selector, value) => { const el = $(selector); if (el) el.textContent = value; };
-    setText('#loss-value', estimate ? fmtRp(annualLoss) : '\u2014');
+    const liveLoss = (downtime * costPerHour * 12) + (repair * 12);
+    const hint = liveLoss > 0 ? '' : 'Geser downtime atau biaya perbaikan untuk melihat estimasi kerugian.';
+    const lossValue = $('#loss-value');
+    if (lossValue) lossValue.textContent = liveLoss > 0 ? fmtRp(liveLoss) : '\u2014';
     const lossMonth = $('#loss-month');
-    if (lossMonth) lossMonth.innerHTML = estimate ? `\u2248 <b>${fmtRp(annualLoss / 12)}</b> bocor setiap bulan` : 'Geser downtime atau biaya perbaikan untuk melihat estimasi kerugian.';
-    setText('#saving-result', estimate ? fmtRp(annualSaving) : '\u2014');
-    setText('#roi-result', estimate && mid ? `Kembali ${fmtRp(recoveryRatio)}` : '\u2014');
-    setText('#net-benefit-result', estimate && annualSaving ? fmtRp(netBenefit) : '\u2014');
-    setText('#bar-loss-val', estimate ? `${fmtRp(annualLoss)} hilang` : '\u2014');
-    setText('#bar-save-val', estimate ? `${fmtRp(remainingLoss)} tersisa` : '\u2014');
-    const barSave = $('#bar-save');
-    if (barSave) barSave.style.width = estimate && annualLoss ? `${Math.max(0, Math.min(100, remainingLoss / annualLoss * 100))}%` : '0%';
-    const compareBars = $('#compare-bars');
-    if (compareBars) compareBars.hidden = !estimate;
-    setText('#delay-note', estimate ? `Setiap bulan menunda keputusan = ${fmtRp(annualLoss / 12)} tetap hilang.` : '');
-    const delayNote = $('#delay-note');
-    if (delayNote) delayNote.hidden = !estimate;
+    if (lossMonth) lossMonth.innerHTML = liveLoss > 0 ? `\u2248 <b>${fmtRp(liveLoss / 12)}</b> bocor setiap bulan` : hint;
     const liveSummary = $('#live-summary');
     if (liveSummary) {
-      const liveLoss = (downtime * costPerHour * 12) + (repair * 12);
       liveSummary.innerHTML = `<p class="live-label">Perkiraan kerugian saat ini</p><p class="live-value">${liveLoss > 0 ? fmtRp(liveLoss) : '\u2014'}</p><p class="live-month">${liveLoss > 0 ? `\u2248 <b>${fmtRp(liveLoss / 12)}</b> bocor setiap bulan` : 'Geser slider untuk melihat angka'}</p>`;
       liveSummary.hidden = false;
     }
+    state.estimate = estimateRange();
     renderDiagnosis();
   };
   const painLabels = {
@@ -316,24 +297,18 @@
   });
   $('#result-gate').addEventListener('click', () => {
     const gateHint = $('#gate-hint');
-    const assetField = $('#asset-range')?.closest('label');
-    const painGroup = $$('[name="pain_point"]')[0]?.closest('.choice-grid');
-    const missing = [];
-    if (!selectedAssetRange()) missing.push('rentang aset');
-    if ($$('[name="pain_point"]:checked').length === 0) missing.push('minimal satu masalah utama');
-    if (missing.length) {
-      if (assetField) assetField.classList.toggle('needs-attention', !selectedAssetRange());
-      if (painGroup) painGroup.classList.toggle('needs-attention', $$('[name="pain_point"]:checked').length === 0);
+    const downtime = Number($('#dt-range')?.value || 0);
+    const costPerHour = Number($('#dtcost-range')?.value || 0);
+    const repair = Number($('#repair-range')?.value || 0);
+    const liveLoss = (downtime * costPerHour * 12) + (repair * 12);
+    if (liveLoss <= 0) {
       if (gateHint) {
-        gateHint.textContent = `Lengkapi dulu ${missing.join(' dan ')} sebelum melihat hasil.`;
+        gateHint.textContent = 'Geser downtime atau biaya perbaikan untuk melihat diagnosis kerugian terlebih dahulu.';
         gateHint.hidden = false;
       }
-      const target = (!selectedAssetRange() && assetField) || painGroup;
-      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      $('#dt-range')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
-    if (assetField) assetField.classList.remove('needs-attention');
-    if (painGroup) painGroup.classList.remove('needs-attention');
     if (gateHint) gateHint.hidden = true;
     leadError.hidden = true;
     leadSubmit.hidden = false;
