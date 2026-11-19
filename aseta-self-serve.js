@@ -88,8 +88,9 @@
     $('#delay-note').hidden = !estimate;
     const liveSummary = $('#live-summary');
     if (liveSummary) {
-      liveSummary.innerHTML = estimate ? `Perkiraan kerugian saat ini: <b>${fmtRp(annualLoss)}</b> per tahun` : '';
-      liveSummary.hidden = !estimate;
+      const liveLoss = (downtime * costPerHour * 12) + (repair * 12);
+      liveSummary.innerHTML = liveLoss > 0 ? `Perkiraan kerugian saat ini: <b>${fmtRp(liveLoss)}</b> per tahun` : '';
+      liveSummary.hidden = liveLoss <= 0;
     }
   };
   const updateProfileSummary = () => {
