@@ -24,7 +24,7 @@
   };
   const state = { profile: {}, painPoints: [], features: [], estimate: null, score: 0, lead: null, pdfBlob: null };
   const selectedFeatures = () => $$('.feature-choice input:checked').map((input) => input.value);
-  const selectedAssetRange = () => $('#asset-range')?.value || $('#asset-range-summary')?.value || '';
+  const selectedAssetRange = () => $('#asset-range')?.value || '';
   const getProfile = () => ({
     assetRange: selectedAssetRange(),
     system: $('#profile-system')?.value || '',
@@ -112,8 +112,8 @@
   };  const updateProfileSummary = () => {
     const profile = getProfile();
     const range = assetRanges[profile.assetRange];
-    $('#profile-summary').textContent = range ? `${range.label} aset · ${profile.branches || 'lokasi belum dipilih'} · target ${$('#implementation-target option:checked')?.textContent || 'belum dipilih'}` : 'Lengkapi identifikasi kebutuhan untuk mulai.';
-    $('#asset-range-summary').value = profile.assetRange;
+    const summary = $('#profile-summary');
+    if (summary) summary.textContent = range ? `${range.label} aset · ${profile.branches || 'lokasi belum dipilih'} · target ${$('#implementation-target option:checked')?.textContent || 'belum dipilih'}` : 'Lengkapi identifikasi kebutuhan untuk mulai.';
   };
   const calculateScore = () => {
     const profile = getProfile();
@@ -182,7 +182,6 @@
     updateProfileSummary();
   });
   ['#asset-range', '#profile-system', '#profile-branches', '#implementation-target'].forEach((selector) => $(selector)?.addEventListener('change', updateProfileSummary));
-  $('#asset-range-summary').addEventListener('change', () => { $('#asset-range').value = $('#asset-range-summary').value; updateProfileSummary(); updateEstimate(); });
   $$('.calc-panel input, .calc-panel select').forEach((input) => input.addEventListener('input', updateEstimate));
   $$('.calc-panel input, .calc-panel select').forEach((input) => input.addEventListener('change', updateEstimate));
   const syncHardwareOptions = () => {
@@ -316,7 +315,7 @@
     dialog.showModal();
     leadForm.querySelector('[name="name"]').focus();
   });
-  ['#asset-range', '#asset-range-summary'].forEach((selector) => $(selector)?.addEventListener('change', () => { const hint = $('#gate-hint'); if (hint) hint.hidden = true; $('#asset-range')?.closest('label')?.classList.remove('needs-attention'); }));
+  $('#asset-range')?.addEventListener('change', () => { const hint = $('#gate-hint'); if (hint) hint.hidden = true; $('#asset-range')?.closest('label')?.classList.remove('needs-attention'); });
   $$('[name="pain_point"]').forEach((input) => input.addEventListener('change', () => { const hint = $('#gate-hint'); if (hint) hint.hidden = true; if ($$('[name="pain_point"]:checked').length) $$('[name="pain_point"]')[0]?.closest('.choice-grid')?.classList.remove('needs-attention'); renderDiagnosis(); }));
   $('[data-close-lead]').addEventListener('click', () => dialog.close());
   leadForm.addEventListener('submit', async (event) => {

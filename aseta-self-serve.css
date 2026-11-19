@@ -108,3 +108,12 @@
 
 .calc-formula{margin:18px 0 0;padding:12px 14px;border-left:3px solid var(--line);background:var(--surface);color:var(--muted);font-size:11px;line-height:1.55}
 .calc-formula b{color:var(--ink)}
+
+.solution-panel{margin-top:26px;padding-top:26px;border-top:1px solid var(--line)}
+.solution-panel h3{margin:0 0 8px;font-size:20px}
+.solution-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:16px;margin-top:16px}
+.solution-block{padding:18px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.solution-block .enterprise-picker{border-top:0;padding-top:0;margin-top:0}
+.solution-label{display:grid;gap:7px;font-weight:600;font-size:12px}
+.solution-label select{width:100%;border:1px solid #cbd5e1;border-radius:7px;padding:11px;background:#fff;color:var(--ink)}
+@media(max-width:800px){.solution-grid{grid-template-columns:1fr}}
