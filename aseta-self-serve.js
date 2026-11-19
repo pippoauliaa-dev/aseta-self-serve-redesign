@@ -76,7 +76,7 @@
     const setText = (selector, value) => { const el = $(selector); if (el) el.textContent = value; };
     setText('#loss-value', estimate ? fmtRp(annualLoss) : '\u2014');
     const lossMonth = $('#loss-month');
-    if (lossMonth) lossMonth.innerHTML = estimate ? `\u2248 <b>${fmtRp(annualLoss / 12)}</b> bocor setiap bulan` : 'Lengkapi simulasi untuk melihat angka.';
+    if (lossMonth) lossMonth.innerHTML = estimate ? `\u2248 <b>${fmtRp(annualLoss / 12)}</b> bocor setiap bulan` : 'Geser downtime atau biaya perbaikan untuk melihat estimasi kerugian.';
     setText('#saving-result', estimate ? fmtRp(annualSaving) : '\u2014');
     setText('#roi-result', estimate && mid ? `Kembali ${fmtRp(recoveryRatio)}` : '\u2014');
     setText('#net-benefit-result', estimate && annualSaving ? fmtRp(netBenefit) : '\u2014');
