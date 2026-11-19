@@ -87,5 +87,9 @@
 .lead-dialog-close:focus{outline:none}
 .lead-dialog-close:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:6px}
 
-.live-summary{margin:16px 0 0;padding:12px 16px;border-radius:9px;border:1px solid #c7daf7;background:var(--blue-soft);color:#1e3a6b;font-size:12.5px}
-.live-summary b{color:var(--navy);font-size:14px}
+.live-summary{margin:18px 0 0;padding:20px 22px;border-radius:12px;background:linear-gradient(125deg,#102d65,#1c58b7 70%);color:#fff;position:relative;overflow:hidden}
+.live-summary::after{content:"";position:absolute;right:-50px;top:-50px;width:170px;height:170px;border-radius:50%;background:rgba(243,176,0,.16)}
+.live-label{margin:0 0 3px;color:#cbdcff;font-size:11.5px;position:relative}
+.live-value{margin:4px 0 2px;font-size:clamp(28px,3.4vw,38px);line-height:1;font-weight:800;letter-spacing:-.035em;position:relative}
+.live-month{margin:0;color:#d9e5f7;font-size:12px;position:relative}
+.live-month b{color:#fbd36b}
