@@ -89,7 +89,9 @@
     const liveSummary = $('#live-summary');
     if (liveSummary) {
       const liveLoss = (downtime * costPerHour * 12) + (repair * 12);
-      liveSummary.innerHTML = liveLoss > 0 ? `Perkiraan kerugian saat ini: <b>${fmtRp(liveLoss)}</b> per tahun` : '';
+      liveSummary.innerHTML = liveLoss > 0
+        ? `<p class="live-label">Perkiraan kerugian saat ini</p><p class="live-value">${fmtRp(liveLoss)}</p><p class="live-month">â‰ˆ <b>${fmtRp(liveLoss / 12)}</b> bocor setiap bulan</p>`
+        : '';
       liveSummary.hidden = liveLoss <= 0;
     }
   };
