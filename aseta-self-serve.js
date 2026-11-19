@@ -73,29 +73,62 @@
     const netBenefit = estimate && annualSaving ? annualSaving - mid : 0;
     const recoveryRatio = estimate && mid ? annualSaving / mid : 0;
     const remainingLoss = Math.max(annualLoss - annualSaving, 0);
-    $('#loss-value').textContent = estimate ? fmtRp(annualLoss) : '—';
-    $('#loss-month').innerHTML = estimate ? `≈ <b>${fmtRp(annualLoss / 12)}</b> bocor setiap bulan` : 'Lengkapi simulasi untuk melihat angka.';
-    $('#loss-tail').textContent = estimate ? `Dengan target pengurangan ${estimate.reduce}%, sebagian kebocoran ini bisa ditekan.` : '';
-    $('#loss-tail').hidden = !estimate;
-    $('#saving-result').textContent = estimate ? fmtRp(annualSaving) : '—';
-    $('#roi-result').textContent = estimate && mid ? `Kembali ${fmtRp(recoveryRatio)}` : '—';
-    $('#net-benefit-result').textContent = estimate && annualSaving ? fmtRp(netBenefit) : '—';
-    $('#bar-loss-val').textContent = estimate ? `${fmtRp(annualLoss)} hilang` : '—';
-    $('#bar-save-val').textContent = estimate ? `${fmtRp(remainingLoss)} tersisa` : '—';
-    $('#bar-save').style.width = estimate && annualLoss ? `${Math.max(0, Math.min(100, remainingLoss / annualLoss * 100))}%` : '0%';
-    $('#compare-bars').hidden = !estimate;
-    $('#delay-note').textContent = estimate ? `Setiap bulan menunda keputusan = ${fmtRp(annualLoss / 12)} tetap hilang.` : '';
-    $('#delay-note').hidden = !estimate;
+    const setText = (selector, value) => { const el = $(selector); if (el) el.textContent = value; };
+    setText('#loss-value', estimate ? fmtRp(annualLoss) : '\u2014');
+    const lossMonth = $('#loss-month');
+    if (lossMonth) lossMonth.innerHTML = estimate ? `\u2248 <b>${fmtRp(annualLoss / 12)}</b> bocor setiap bulan` : 'Lengkapi simulasi untuk melihat angka.';
+    setText('#saving-result', estimate ? fmtRp(annualSaving) : '\u2014');
+    setText('#roi-result', estimate && mid ? `Kembali ${fmtRp(recoveryRatio)}` : '\u2014');
+    setText('#net-benefit-result', estimate && annualSaving ? fmtRp(netBenefit) : '\u2014');
+    setText('#bar-loss-val', estimate ? `${fmtRp(annualLoss)} hilang` : '\u2014');
+    setText('#bar-save-val', estimate ? `${fmtRp(remainingLoss)} tersisa` : '\u2014');
+    const barSave = $('#bar-save');
+    if (barSave) barSave.style.width = estimate && annualLoss ? `${Math.max(0, Math.min(100, remainingLoss / annualLoss * 100))}%` : '0%';
+    const compareBars = $('#compare-bars');
+    if (compareBars) compareBars.hidden = !estimate;
+    setText('#delay-note', estimate ? `Setiap bulan menunda keputusan = ${fmtRp(annualLoss / 12)} tetap hilang.` : '');
+    const delayNote = $('#delay-note');
+    if (delayNote) delayNote.hidden = !estimate;
     const liveSummary = $('#live-summary');
     if (liveSummary) {
       const liveLoss = (downtime * costPerHour * 12) + (repair * 12);
-      liveSummary.innerHTML = liveLoss > 0
-        ? `<p class="live-label">Perkiraan kerugian saat ini</p><p class="live-value">${fmtRp(liveLoss)}</p><p class="live-month">â‰ˆ <b>${fmtRp(liveLoss / 12)}</b> bocor setiap bulan</p>`
-        : '';
-      liveSummary.hidden = liveLoss <= 0;
+      liveSummary.innerHTML = `<p class="live-label">Perkiraan kerugian saat ini</p><p class="live-value">${liveLoss > 0 ? fmtRp(liveLoss) : '\u2014'}</p><p class="live-month">${liveLoss > 0 ? `\u2248 <b>${fmtRp(liveLoss / 12)}</b> bocor setiap bulan` : 'Geser slider untuk melihat angka'}</p>`;
+      liveSummary.hidden = false;
     }
+    renderDiagnosis();
   };
-  const updateProfileSummary = () => {
+  const painLabels = {
+    'data-tersebar': 'Data aset tersebar',
+    'audit-lambat': 'Stock opname/audit memakan waktu',
+    'maintenance-reaktif': 'Maintenance masih reaktif',
+    'lintas-lokasi': 'Kontrol lintas lokasi sulit',
+    'laporan-keuangan': 'Laporan lifecycle/keuangan belum siap'
+  };
+  const painSolutions = {
+    'data-tersebar': 'Detail Asset + QR/RFID',
+    'audit-lambat': 'QR/RFID + Laporan Aktifitas',
+    'maintenance-reaktif': 'Preventive Maintenance',
+    'lintas-lokasi': 'Transfer & Mutasi + Dashboard',
+    'laporan-keuangan': 'Laporan Aktifitas + Depresiasi'
+  };
+  const renderDiagnosis = () => {
+    const causeList = $('#cause-list');
+    const solutionList = $('#solution-list');
+    if (!causeList || !solutionList) return;
+    const downtime = Number($('#dt-range')?.value || 0);
+    const repair = Number($('#repair-range')?.value || 0);
+    const causes = [];
+    if (downtime > 0) causes.push(`Downtime operasi ${downtime} jam/bulan`);
+    if (repair > 0) causes.push(`Perbaikan reaktif ${fmtRp(repair)}/bulan`);
+    const checked = $$('[name="pain_point"]:checked');
+    checked.forEach((input) => causes.push(painLabels[input.value] || input.value));
+    const solutions = new Set();
+    checked.forEach((input) => { const s = painSolutions[input.value]; if (s) solutions.add(s); });
+    if (downtime > 0 || repair > 0) solutions.add('Preventive Maintenance');
+    if (!solutions.size) solutions.add('Detail Asset + QR/RFID');
+    causeList.innerHTML = causes.length ? causes.map((c) => `<li>${c}</li>`).join('') : '<li class="diag-empty">Belum ada data simulasi.</li>';
+    solutionList.innerHTML = [...solutions].map((s) => `<li>${s}</li>`).join('');
+  };  const updateProfileSummary = () => {
     const profile = getProfile();
     const range = assetRanges[profile.assetRange];
     $('#profile-summary').textContent = range ? `${range.label} aset · ${profile.branches || 'lokasi belum dipilih'} · target ${$('#implementation-target option:checked')?.textContent || 'belum dipilih'}` : 'Lengkapi identifikasi kebutuhan untuk mulai.';

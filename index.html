@@ -149,7 +149,7 @@
             <label class="feature-choice" data-enterprise-feature="cross-branch-approval"><input type="checkbox" value="cross-branch-approval"><span><b>Approval &amp; kontrol lintas cabang</b><small>Persetujuan mutasi dan kontrol aset multi-lokasi.</small></span></label>
             <label class="feature-choice" data-enterprise-feature="erp-integration"><input type="checkbox" value="erp-integration"><span><b>Integrasi accounting/ERP via API</b><small>Integrasi berdasarkan kebutuhan dan scope teknis yang dikonfirmasi.</small></span></label>
           </div></div>
-                    <p class="live-summary" id="live-summary" hidden></p>                    <button class="button button-primary" type="button" id="result-gate">Lihat hasil &amp; readiness score <span aria-hidden="true">→</span></button>
+                    <p class="live-summary" id="live-summary"></p>                    <button class="button button-primary" type="button" id="result-gate">Lihat cara menyelamatkan kerugian Anda <span aria-hidden="true">→</span></button>
           <p class="lead-error" id="gate-hint" role="alert" hidden></p>
         </div><aside class="calc-side"><h3>Bagaimana hasil ini dipakai?</h3><ol><li>Jawaban pain point membantu memetakan kebutuhan prioritas.</li><li>Pilihan fitur menunjukkan scope yang perlu dibahas bersama Sales.</li><li>Readiness score hanya mengatur prioritas follow-up, bukan menilai kelayakan bisnis Anda.</li></ol><div class="disclosure"><b>Transparansi Enterprise</b><p>Enterprise adalah rekomendasi saat kebutuhan lifecycle, maintenance, governance, atau integrasi melampaui Essentials. Detail paket, add-on, harga, dan implementasi dikonfirmasi bersama tim Aseta.</p></div></aside></div>
       </div>
@@ -163,7 +163,7 @@
     <section class="section start-section" id="mulai"><div class="container start-card"><div><p class="eyebrow">Siap berdiskusi?</p><h2>Validasi Kebutuhan Sistem Aset Perusahaan Anda Hari Ini.</h2><p>Hasilkan dokumen analisis kebutuhan instan untuk diselaraskan dengan internal tim Anda. Hubungi tim kami kapan pun Anda membutuhkan asesmen teknis mendalam.</p></div><a class="button button-primary" href="https://wa.me/6281217984959?text=Halo%20tim%20Aseta%2C%20saya%20ingin%20berkonsultasi%20mengenai%20kebutuhan%20sistem%20aset%20perusahaan%20saya." target="_blank" rel="noopener noreferrer">Konsultasikan Kebutuhan Anda →</a></div></section>
   </main>
 
-    <dialog class="lead-dialog" id="lead-dialog" aria-labelledby="lead-dialog-title">
+      <dialog class="lead-dialog" id="lead-dialog" aria-labelledby="lead-dialog-title">
     <div class="lead-dialog-card">
       <button class="lead-dialog-close" type="button" data-close-lead aria-label="Tutup form">&times;</button>
       <div class="lead-dialog-grid">
@@ -173,39 +173,15 @@
             <p class="loss-label">Tanpa sistem, potensi kerugian Anda per tahun</p>
             <p class="loss-value" id="loss-value">&mdash;</p>
             <p class="loss-month" id="loss-month">Lengkapi simulasi untuk melihat angka.</p>
-            <p class="loss-tail" id="loss-tail" hidden></p>
           </div>
-          <div class="result-cards">
-            <div class="result-card is-hero">
-              <small>Yang bisa diselamatkan</small>
-              <strong id="saving-result">&mdash;</strong>
-              <span class="result-card-note">per tahun</span>
-            </div>
-            <div class="result-card">
-              <small>Setiap Rp1 yang diinvestasikan</small>
-              <strong id="roi-result">&mdash;</strong>
-              <span class="result-card-note">dalam tahun pertama</span>
-            </div>
-            <div class="result-card">
-              <small>Untung bersih setelah biaya sistem</small>
-              <strong id="net-benefit-result">&mdash;</strong>
-              <span class="result-card-note">di tahun pertama</span>
-            </div>
+          <div class="diag-block">
+            <h4>Penyebab utama</h4>
+            <ul id="cause-list"><li class="diag-empty">Belum ada data simulasi.</li></ul>
           </div>
-          <div class="compare-bars" id="compare-bars" hidden>
-            <h3>Perbandingan setahun</h3>
-            <div class="bar-row">
-              <span>Tanpa Aseta</span>
-              <span class="bar-track"><span class="bar-fill is-loss" id="bar-loss"></span></span>
-              <span class="bar-val" id="bar-loss-val">&mdash;</span>
-            </div>
-            <div class="bar-row">
-              <span>Dengan Aseta</span>
-              <span class="bar-track"><span class="bar-fill is-save" id="bar-save"></span></span>
-              <span class="bar-val" id="bar-save-val">&mdash;</span>
-            </div>
+          <div class="diag-block diag-solution">
+            <h4>Cara Aseta menekan kerugian ini</h4>
+            <ul id="solution-list"><li class="diag-empty">Pilih masalah utama untuk melihat solusinya.</li></ul>
           </div>
-          <p class="delay-note" id="delay-note" hidden></p>
           <p class="calc-footnote">Angka bersifat indikatif dari simulasi Anda, bukan penawaran harga.</p>
         </div>
         <div class="lead-dialog-form-wrap">
