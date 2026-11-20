@@ -319,6 +319,20 @@
   });
   $('#result-gate').addEventListener('click', () => {
     const gateHint = $('#gate-hint');
+    const problemForm = $('#problem-identification-form');
+    const requiredFields = ['#asset-range', '#profile-system', '#profile-branches', '#implementation-target'];
+    const missingField = requiredFields.find((selector) => !$(selector)?.value);
+    const painSelected = $$('[name="pain_point"]:checked').length > 0;
+    if (!painSelected || missingField) {
+      if (gateHint) {
+        gateHint.textContent = 'Lengkapi Langkah 1 dulu: pilih minimal satu masalah utama dan isi jumlah aset, sistem yang dipakai, jumlah lokasi, serta target implementasi. Estimasi penghematan dan rekomendasi baru bisa dihitung setelahnya.';
+        gateHint.hidden = false;
+      }
+      if (!painSelected) $('.choice-grid')?.classList.add('needs-attention');
+      if (missingField) $(missingField)?.closest('label')?.classList.add('needs-attention');
+      problemForm?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
     const downtime = Number($('#dt-range')?.value || 0);
     const costPerHour = Number($('#dtcost-range')?.value || 0);
     const repair = Number($('#repair-range')?.value || 0);
@@ -338,7 +352,13 @@
     dialog.showModal();
     leadForm.querySelector('[name="name"]').focus();
   });
-  $('#asset-range')?.addEventListener('change', () => { const hint = $('#gate-hint'); if (hint) hint.hidden = true; $('#asset-range')?.closest('label')?.classList.remove('needs-attention'); });
+  ['#asset-range', '#profile-system', '#profile-branches', '#implementation-target'].forEach((selector) => {
+    $(selector)?.addEventListener('change', () => {
+      const hint = $('#gate-hint');
+      if (hint) hint.hidden = true;
+      $(selector)?.closest('label')?.classList.remove('needs-attention');
+    });
+  });
   $$('[name="pain_point"]').forEach((input) => input.addEventListener('change', () => { const hint = $('#gate-hint'); if (hint) hint.hidden = true; if ($$('[name="pain_point"]:checked').length) $$('[name="pain_point"]')[0]?.closest('.choice-grid')?.classList.remove('needs-attention'); renderDiagnosis(); }));
   $('[data-close-lead]').addEventListener('click', () => dialog.close());
   leadForm.addEventListener('submit', async (event) => {
