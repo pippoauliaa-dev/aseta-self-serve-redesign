@@ -127,7 +127,8 @@
     if (profile.system === 'manual' || profile.system === 'spreadsheet') score += 10;
     return Math.min(100, score);
   };
-  const renderResults = (skipUpload = false) => {
+  const renderResults = () => {
+    updateEstimate();
     state.score = calculateScore();
     state.profile = getProfile();
     state.painPoints = $$('[name="pain_point"]:checked').map((input) => input.value);
@@ -143,13 +144,12 @@
     $('#result-feature-summary').textContent = state.features.length ? `Kapabilitas yang dipilih: ${state.features.map((id) => enterpriseFeatureLabels[id]).join('; ')}.` : 'Belum ada kapabilitas Enterprise yang dipilih.';
     $('#results').hidden = false;
     $('#results').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    const est = state.estimate;
-    const loss = est ? est.annualLoss : 0;
-    const saving = est ? est.annualSaving : 0;
-    const reduce = est ? est.reduce : 0;
     const dt = Number($('#dt-range')?.value || 0);
     const cost = Number($('#dtcost-range')?.value || 0);
     const repair = Number($('#repair-range')?.value || 0);
+    const reduce = Number($('#reduce-range')?.value || 0);
+    const loss = (dt * cost * 12) + (repair * 12);
+    const saving = loss * reduce / 100;
     const setText = (id, value) => { const el = $('#' + id); if (el) el.textContent = value; };
     setText('flow-loss', loss > 0 ? fmtRp(loss) : '—');
     setText('flow-formula', '(' + dt + ' jam × ' + fmtRp(cost) + ' × 12) + (' + fmtRp(repair) + ' × 12)');
@@ -167,7 +167,7 @@
     if (flowCauses) flowCauses.innerHTML = $('#cause-list')?.innerHTML || '<li class="diag-empty">Belum ada data simulasi.</li>';
     if (flowSolutions) flowSolutions.innerHTML = $('#solution-list')?.innerHTML || '<li class="diag-empty">Belum ada data simulasi.</li>';
     state.pdfBlob = null;
-    generatePdf().then((blob) => { state.pdfBlob = blob; if (!skipUpload) uploadLeadPdf(blob, state.requestId); }).catch(() => {});
+    generatePdf().then((blob) => { state.pdfBlob = blob; uploadLeadPdf(blob, state.requestId); }).catch(() => {});
   };
   const dialog = $('#lead-dialog');
   const menuToggle = $('.menu-toggle');
@@ -368,7 +368,7 @@
       if (previewMode && error.duplicateAt !== undefined) {
         leadError.hidden = true;
         dialog.close();
-        renderResults(true);
+        renderResults();
         return;
       } else if (error.duplicateAt !== undefined) {
         const when = error.duplicateAt ? new Date(error.duplicateAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
