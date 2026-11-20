@@ -127,7 +127,7 @@
     if (profile.system === 'manual' || profile.system === 'spreadsheet') score += 10;
     return Math.min(100, score);
   };
-  const renderResults = () => {
+  const renderResults = (skipUpload = false) => {
     state.score = calculateScore();
     state.profile = getProfile();
     state.painPoints = $$('[name="pain_point"]:checked').map((input) => input.value);
@@ -167,7 +167,7 @@
     if (flowCauses) flowCauses.innerHTML = $('#cause-list')?.innerHTML || '<li class="diag-empty">Belum ada data simulasi.</li>';
     if (flowSolutions) flowSolutions.innerHTML = $('#solution-list')?.innerHTML || '<li class="diag-empty">Belum ada data simulasi.</li>';
     state.pdfBlob = null;
-    generatePdf().then((blob) => { state.pdfBlob = blob; uploadLeadPdf(blob, state.requestId); }).catch(() => {});
+    generatePdf().then((blob) => { state.pdfBlob = blob; if (!skipUpload) uploadLeadPdf(blob, state.requestId); }).catch(() => {});
   };
   const dialog = $('#lead-dialog');
   const menuToggle = $('.menu-toggle');
@@ -228,6 +228,7 @@
   };
   const makeRequestId = () => globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
   const attribution = new URLSearchParams(window.location.search);
+  const previewMode = attribution.get('preview') === '1';
   const attributionFields = Object.fromEntries(['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid'].map((key) => [key, attribution.get(key) || '']));
   let retryRequestId = '';
   const buildLeadMessage = (data) => {
@@ -364,7 +365,12 @@
       dialog.close();
       renderResults();
     } catch (error) {
-      if (error.duplicateAt !== undefined) {
+      if (previewMode && error.duplicateAt !== undefined) {
+        leadError.hidden = true;
+        dialog.close();
+        renderResults(true);
+        return;
+      } else if (error.duplicateAt !== undefined) {
         const when = error.duplicateAt ? new Date(error.duplicateAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
         leadError.textContent = `Nomor WhatsApp atau email ini sudah pernah mengisi simulasi${when ? ` pada ${when}` : ''}. Jika Anda ingin memperbarui data atau berdiskusi, hubungi tim Aseta.`;
         leadError.hidden = false;
