@@ -125,8 +125,11 @@
 .flow-icon.is-green{background:var(--green)}
 .flow-body{min-width:0}
 .flow-body .eyebrow{margin:0 0 7px;color:var(--blue);font:600 10px Inter,sans-serif;letter-spacing:.1em;text-transform:uppercase}
-.flow-value{margin:0;font-size:26px;line-height:1;font-weight:800;letter-spacing:-.03em;color:var(--navy)}
-.flow-value span{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:0}
+.flow-value{margin:0;font-size:32px;line-height:1.05;font-weight:800;letter-spacing:-.03em;color:var(--navy)}
+.flow-value > span:last-child{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:0}
+.flow-step.is-loss .eyebrow{color:#b42318}
+.flow-step.is-loss .flow-value{color:#b42318}
+.flow-step.is-loss #flow-loss{display:inline-block;background:#fee2e2;border:1px solid #fecaca;border-radius:8px;padding:1px 10px 3px}
 .flow-note{margin:5px 0 0;color:var(--muted);font-size:11px}
 .flow-formula{margin:9px 0 0;padding-top:8px;border-top:1px dashed var(--line);color:var(--muted);font-size:10px}
 .flow-list{margin:0;padding-left:15px;font-size:11.5px}
