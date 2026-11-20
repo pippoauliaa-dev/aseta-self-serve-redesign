@@ -128,7 +128,6 @@
     return Math.min(100, score);
   };
   const renderResults = () => {
-    updateEstimate();
     state.score = calculateScore();
     state.profile = getProfile();
     state.painPoints = $$('[name="pain_point"]:checked').map((input) => input.value);
