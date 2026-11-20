@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="aseta-self-serve.css?v=hasil3copy">
+  <link rel="stylesheet" href="aseta-self-serve.css?v=modalcopy">
 </head>
 <body>
   <header class="site-header" id="top">
@@ -183,18 +183,18 @@
       <button class="lead-dialog-close" type="button" data-close-lead aria-label="Tutup form">&times;</button>
       <div class="lead-dialog-grid">
         <div class="lead-dialog-result">
-          <p class="eyebrow">Simulasi Anda</p>
+          <p class="eyebrow flow-eyebrow-red">Perkiraan kerugian Anda</p>
           <div class="loss-panel" id="loss-panel">
-            <p class="loss-label">Tanpa sistem, potensi kerugian Anda per tahun</p>
-            <p class="loss-value" id="loss-value">&mdash;</p>
+            <p class="loss-label">Hasil simulasi dari asumsi operasi Anda</p>
+            <p class="loss-value flow-value-big" id="loss-value">&mdash;</p>
             <p class="loss-month" id="loss-month">Geser downtime atau biaya perbaikan untuk melihat estimasi kerugian.</p>
           </div>
           <div class="diag-block">
-            <h4>Penyebab utama</h4>
+            <h4 class="flow-h4-red">Penyebab utama</h4>
             <ul id="cause-list"><li class="diag-empty">Belum ada data simulasi.</li></ul>
           </div>
           <div class="diag-block diag-solution">
-            <h4>Cara Aseta menekan kerugian ini</h4>
+            <h4>Cara Aseta menekan kerugian</h4>
             <ul id="solution-list"><li class="diag-empty">Pilih masalah utama untuk melihat solusinya.</li></ul>
           </div>
           <p class="calc-footnote">Angka bersifat indikatif dari simulasi Anda, bukan penawaran harga.</p>
@@ -245,6 +245,6 @@
     fitHeadings();
   })();
   </script>
-  <script src="aseta-self-serve.js?v=hasil3copy"></script>
+  <script src="aseta-self-serve.js?v=modalcopy"></script>
 </body>
 </html>

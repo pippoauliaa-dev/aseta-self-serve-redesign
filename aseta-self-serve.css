@@ -102,6 +102,9 @@
 .diag-block ul{margin:0;padding-left:16px;font-size:12px;color:var(--ink)}
 .diag-block li{margin-bottom:4px}
 .diag-block li:last-child{margin-bottom:0}
+.flow-eyebrow-red{color:#b42318}
+.flow-h4-red{color:#b42318}
+.lead-dialog-result .flow-value-big{font-size:clamp(30px,3.8vw,42px);display:inline-block;background:rgba(243,176,0,.16);border:1px solid rgba(243,176,0,.45);border-radius:8px;padding:2px 12px 4px}
 .diag-solution{border-color:#bfe0cd;background:var(--green-soft)}
 .diag-solution h4{color:var(--green)}
 .diag-empty{list-style:none;margin-left:-16px;color:var(--muted);font-style:italic}
