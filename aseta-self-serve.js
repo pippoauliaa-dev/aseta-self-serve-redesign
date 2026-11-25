@@ -43,7 +43,7 @@
     const hardware = hardwareSelected
       ? method === 'rfid'
         ? [19500000 + Math.ceil(range.min / 100) * tagPrice, 19500000 + Math.ceil(range.max / 100) * tagPrice]
-        : [7610000, 7610000]
+        : [8060000, 8060000]
       : [0, 0];
     const low = subscriptions[0] + enterprise + hardware[0];
     const high = subscriptions[1] + enterprise + hardware[1];
