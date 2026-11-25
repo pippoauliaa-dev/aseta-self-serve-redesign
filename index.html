@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="aseta-self-serve.css?v=panelv6c">
+  <link rel="stylesheet" href="aseta-self-serve.css?v=panelv6e">
 </head>
 <body>
   <header class="site-header" id="top">
@@ -206,30 +206,7 @@
       </div>
     </div>
 
-    <div class="solution-panel" id="solution-panel">
-          <p class="eyebrow">Solusi Aseta</p>
-          <h3>Susun pendekatan yang paling relevan</h3>
-          <p class="muted">Bagian ini membantu tim Aseta menyiapkan rekomendasi. Pilihan di bawah tidak mengubah angka kerugian di atas.</p>
-          <div class="solution-grid"><div class="solution-block">
-            <label class="solution-label">Metode identifikasi aset<select id="subscription-type"><option value="qr">QR Code</option><option value="rfid">RFID</option></select></label>
-            <div class="estimator-options" id="hardware-options">
-              <label class="choice" id="qr-hardware-choice"><input id="qr-hardware" type="checkbox"><span><b>Beli paket hardware QR Code dari Aseta</b><small>Tambahkan paket hardware &amp; consumables QR (Rp7.610.000) ke estimasi.</small></span></label>
-              <label class="choice" id="rfid-hardware-choice" hidden><input id="rfid-hardware" type="checkbox"><span><b>Beli hardware RFID dari Aseta</b><small>Tambahkan handheld reader (Rp19.500.000) dan tag RFID ke estimasi.</small></span></label>
-              <label id="rfid-tag-choice" hidden>Jenis tag RFID<select id="rfid-tag-type"><option value="180000">UHF label sticker · Rp180.000 / 100 pcs</option><option value="850000">UHF on-metal sticker · Rp850.000 / 100 pcs</option><option value="2400000">UHF on-metal ABS · Rp2.400.000 / 100 pcs</option></select></label>
-            </div>
-          </div><div class="solution-block enterprise-picker">
-            <div class="picker-heading"><div><p class="eyebrow">Enterprise add-ons</p><h3>Pilih kapabilitas yang dibutuhkan</h3></div><output id="enterprise-features-output">0 fitur dipilih</output></div>
-            <p class="muted">Pilih kapabilitas yang sesuai scope organisasi Anda. Harga dan detail dibahas bersama tim Aseta.</p>
-            <div class="feature-list">
-              <label class="feature-choice" data-enterprise-feature="depreciation"><input type="checkbox" value="depreciation"><span><b>Depresiasi aset otomatis</b><small>Perhitungan depresiasi aset berdasarkan metode yang disepakati.</small></span></label>
-              <label class="feature-choice" data-enterprise-feature="maintenance"><input type="checkbox" value="maintenance"><span><b>Maintenance &amp; work order</b><small>Preventive/corrective maintenance, ticket, dan penugasan pekerjaan.</small></span></label>
-              <label class="feature-choice" data-enterprise-feature="borrowing-disposal"><input type="checkbox" value="borrowing-disposal"><span><b>Peminjaman &amp; disposal/write-off</b><small>Pencatatan peminjaman dan proses penghapusan aset sesuai scope.</small></span></label>
-              <label class="feature-choice" data-enterprise-feature="cross-branch-approval"><input type="checkbox" value="cross-branch-approval"><span><b>Approval &amp; kontrol lintas cabang</b><small>Persetujuan mutasi dan kontrol aset multi-lokasi.</small></span></label>
-              <label class="feature-choice" data-enterprise-feature="erp-integration"><input type="checkbox" value="erp-integration"><span><b>Integrasi accounting/ERP via API</b><small>Integrasi berdasarkan kebutuhan dan scope teknis yang dikonfirmasi.</small></span></label>
-            </div>
-          </div></div>
-        </div>
-<div class="internal-strip"><div><small>Ringkasan untuk tim Aseta</small><span>Prioritas tindak lanjut: <b id="readiness-score">0</b> · <span id="readiness-label">—</span></span><p id="readiness-reason" class="internal-note"></p></div><div><span>Rekomendasi: <b id="recommendation-plan">—</b></span><p id="recommendation-reason" class="internal-note"></p><p id="result-feature-summary" class="internal-note"></p></div></div><div class="result-actions"><button class="button button-dark" type="button" id="download-result">Download ringkasan PDF</button><button class="button button-outline" type="button" id="whatsapp-result">Lanjut ke WhatsApp + PDF ↗</button></div><p class="result-disclaimer" id="whatsapp-hint" role="status" hidden></p><p class="result-disclaimer">Hasil bersifat indikatif dan belum merupakan penawaran harga atau keputusan implementasi.</p></div>
+    <div hidden><select id="subscription-type"><option value="qr" selected>QR Code</option><option value="rfid">RFID</option></select><label id="qr-hardware-choice"><input id="qr-hardware" type="checkbox"></label><label id="rfid-hardware-choice"><input id="rfid-hardware" type="checkbox"></label><label id="rfid-tag-choice"><select id="rfid-tag-type"><option value="180000">UHF label sticker</option><option value="850000">on-metal sticker</option><option value="2400000">on-metal ABS</option></select><output id="enterprise-features-output">0 fitur dipilih</output></label></div><div class="internal-strip"><div><small>Ringkasan untuk tim Aseta</small><span>Prioritas tindak lanjut: <b id="readiness-score">0</b> · <span id="readiness-label">—</span></span><p id="readiness-reason" class="internal-note"></p></div><div><span>Rekomendasi: <b id="recommendation-plan">—</b></span><p id="recommendation-reason" class="internal-note"></p><p id="result-feature-summary" class="internal-note"></p></div></div><div class="result-actions"><button class="button button-dark" type="button" id="download-result">Download ringkasan PDF</button><button class="button button-outline" type="button" id="whatsapp-result">Lanjut ke WhatsApp + PDF ↗</button></div><p class="result-disclaimer" id="whatsapp-hint" role="status" hidden></p><p class="result-disclaimer">Hasil bersifat indikatif dan belum merupakan penawaran harga atau keputusan implementasi.</p></div>
     </section>
 
     <section class="section faq" id="faq"><div class="container faq-grid"><div><p class="eyebrow">Masih ingin mengecek?</p><h2>Jawaban sebelum mengambil langkah.</h2><p class="muted">Gunakan pertanyaan ini sebagai checklist evaluasi internal.</p></div><div class="faq-list"><details><summary>Apakah saya harus meeting sebelum melihat hasil?</summary><p>Tidak. Anda bisa menyelesaikan identifikasi dan simulasi lebih dulu. Data dicatat sebelum hasil dibuka agar tim Aseta dapat menindaklanjuti dengan konteks yang relevan.</p></details><details><summary>Apakah hasil kalkulator adalah harga penawaran?</summary><p>Bukan. Kalkulator memakai harga acuan dan menghasilkan kisaran untuk membantu menyusun scope awal. Harga, add-on, integrasi, dan implementasi perlu dikonfirmasi.</p></details><details><summary>Apa arti skor prioritas tindak lanjut?</summary><p>Skor merangkum urgensi, kompleksitas kebutuhan, dan target implementasi untuk membantu tim Aseta menentukan tindak lanjut yang relevan. Skor ini bukan penilaian terhadap perusahaan Anda.</p></details><details><summary>Apakah Aseta menggantikan ERP?</summary><p>Aseta berfokus pada asset lifecycle dan maintenance management. Integrasi dengan accounting/ERP dapat dievaluasi berdasarkan kebutuhan organisasi.</p></details></div></div></section>
@@ -303,6 +280,6 @@
     fitHeadings();
   })();
   </script>
-  <script src="aseta-self-serve.js?v=panelv6c"></script>
+  <script src="aseta-self-serve.js?v=panelv6e"></script>
 </body>
 </html>
