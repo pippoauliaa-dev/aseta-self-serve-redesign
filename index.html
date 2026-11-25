@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="aseta-self-serve.css?v=spacing1">
+  <link rel="stylesheet" href="aseta-self-serve.css?v=logic1">
 </head>
 <body>
   <header class="site-header" id="top">
@@ -184,10 +184,10 @@
           <div class="cost-block">
             <div class="cost-label"><span class="cost-icon">📦</span> Paket hardware &amp; consumables RFID</div>
             <div class="hw-options">
-              <label class="hw-choice"><input type="checkbox" checked><div class="hw-info"><b>RFID Handheld Integrated Reader</b><small>Unit utama</small></div><div class="hw-price-txt">Rp19.500.000</div></label>
-              <label class="hw-choice"><input type="checkbox" checked><div class="hw-info"><b>RFID UHF Label Sticker Tag</b><small>Rp180.000 / 100 pcs</small></div><div class="hw-price-txt">Rp180.000</div></label>
-              <label class="hw-choice"><input type="checkbox"><div class="hw-info"><b>RFID UHF On Metal Sticker Tag</b><small>Rp850.000 / 100 pcs</small></div><div class="hw-price-txt">Rp850.000</div></label>
-              <label class="hw-choice"><input type="checkbox"><div class="hw-info"><b>RFID UHF On Metal ABS Tag</b><small>Rp2.400.000 / 100 pcs</small></div><div class="hw-price-txt">Rp2.400.000</div></label>
+              <label class="hw-choice" data-hw="reader"><input type="checkbox" checked><div class="hw-info"><b>RFID Handheld Integrated Reader</b><small>Unit utama</small></div><div class="hw-price-txt">Rp19.500.000</div></label>
+              <label class="hw-choice" data-tag="180000"><input type="checkbox" checked><div class="hw-info"><b>RFID UHF Label Sticker Tag</b><small>Rp180.000 / 100 pcs</small></div><div class="hw-price-txt">Rp180.000</div></label>
+              <label class="hw-choice" data-tag="850000"><input type="checkbox"><div class="hw-info"><b>RFID UHF On Metal Sticker Tag</b><small>Rp850.000 / 100 pcs</small></div><div class="hw-price-txt">Rp850.000</div></label>
+              <label class="hw-choice" data-tag="2400000"><input type="checkbox"><div class="hw-info"><b>RFID UHF On Metal ABS Tag</b><small>Rp2.400.000 / 100 pcs</small></div><div class="hw-price-txt">Rp2.400.000</div></label>
             </div>
             <p class="hw-footnote">Harga dapat berubah sewaktu-waktu.</p>
           </div>
@@ -223,16 +223,16 @@
       <div class="grid-col enterprise-picker">
         <p class="eyebrow">Kapabilitas Enterprise</p>
         <h3>Pilih kapabilitas yang relevan</h3>
-        <label class="choice"><input type="checkbox" checked><span><b>Depresiasi aset otomatis</b><small>Perhitungan depresiasi sesuai metode yang disepakati.</small></span></label>
-        <label class="choice"><input type="checkbox" checked><span><b>Laporan aktivitas &amp; depresiasi</b><small>Laporan aset siap untuk keperluan akuntansi.</small></span></label>
-        <label class="choice"><input type="checkbox"><span><b>Maintenance &amp; work order</b><small>Preventive/corrective maintenance dan ticket.</small></span></label>
-        <label class="choice"><input type="checkbox"><span><b>Approval &amp; kontrol lintas cabang</b><small>Mutasi dan kontrol aset multi-lokasi.</small></span></label>
-        <label class="choice"><input type="checkbox"><span><b>Integrasi accounting/ERP via API</b><small>Integrasi sesuai scope teknis.</small></span></label>
+        <label class="choice feature-choice" data-enterprise-feature="depreciation"><input type="checkbox" value="depreciation" checked><span><b>Depresiasi aset otomatis</b><small>Perhitungan depresiasi sesuai metode yang disepakati.</small></span></label>
+        <label class="choice feature-choice" data-enterprise-feature="laporan-keuangan"><input type="checkbox" value="laporan-keuangan" checked><span><b>Laporan aktivitas &amp; depresiasi</b><small>Laporan aset siap untuk keperluan akuntansi.</small></span></label>
+        <label class="choice feature-choice" data-enterprise-feature="maintenance"><input type="checkbox" value="maintenance"><span><b>Maintenance &amp; work order</b><small>Preventive/corrective maintenance dan ticket.</small></span></label>
+        <label class="choice feature-choice" data-enterprise-feature="cross-branch-approval"><input type="checkbox" value="cross-branch-approval"><span><b>Approval &amp; kontrol lintas cabang</b><small>Mutasi dan kontrol aset multi-lokasi.</small></span></label>
+        <label class="choice feature-choice" data-enterprise-feature="erp-integration"><input type="checkbox" value="erp-integration"><span><b>Integrasi accounting/ERP via API</b><small>Integrasi sesuai scope teknis.</small></span></label>
         <p class="picker-foot">Harga dan scope final dibahas bersama tim Aseta.</p>
       </div>
     </div>
 
-    <div hidden><select id="subscription-type"><option value="qr" selected>QR Code</option><option value="rfid">RFID</option></select><label id="qr-hardware-choice"><input id="qr-hardware" type="checkbox"></label><label id="rfid-hardware-choice"><input id="rfid-hardware" type="checkbox"></label><label id="rfid-tag-choice"><select id="rfid-tag-type"><option value="180000">UHF label sticker</option><option value="850000">on-metal sticker</option><option value="2400000">on-metal ABS</option></select><output id="enterprise-features-output">0 fitur dipilih</output></label></div><div class="internal-strip"><div><small>Ringkasan untuk tim Aseta</small><span>Prioritas tindak lanjut: <b id="readiness-score">0</b> · <span id="readiness-label">—</span></span><p id="readiness-reason" class="internal-note"></p></div><div><span>Rekomendasi: <b id="recommendation-plan">—</b></span><p id="recommendation-reason" class="internal-note"></p><p id="result-feature-summary" class="internal-note"></p></div></div><div class="result-actions"><button class="button button-dark" type="button" id="download-result">Download ringkasan PDF</button><button class="button button-outline" type="button" id="whatsapp-result">Lanjut ke WhatsApp + PDF ↗</button></div><p class="result-disclaimer" id="whatsapp-hint" role="status" hidden></p><p class="result-disclaimer">Hasil bersifat indikatif dan belum merupakan penawaran harga atau keputusan implementasi.</p></div>
+    <div hidden><select id="subscription-type"><option value="qr" selected>QR Code</option><option value="rfid">RFID</option></select><label id="qr-hardware-choice"><input id="qr-hardware" type="checkbox" checked></label><input id="rfid-tags" type="checkbox" checked><label id="rfid-hardware-choice"><input id="rfid-hardware" type="checkbox"></label><label id="rfid-tag-choice"><select id="rfid-tag-type"><option value="180000">UHF label sticker</option><option value="850000">on-metal sticker</option><option value="2400000">on-metal ABS</option></select><output id="enterprise-features-output">0 fitur dipilih</output></label></div><div class="internal-strip"><div><small>Ringkasan untuk tim Aseta</small><span>Prioritas tindak lanjut: <b id="readiness-score">0</b> · <span id="readiness-label">—</span></span><p id="readiness-reason" class="internal-note"></p></div><div><span>Rekomendasi: <b id="recommendation-plan">—</b></span><p id="recommendation-reason" class="internal-note"></p><p id="result-feature-summary" class="internal-note"></p></div></div><div class="result-actions"><button class="button button-dark" type="button" id="download-result">Download ringkasan PDF</button><button class="button button-outline" type="button" id="whatsapp-result">Lanjut ke WhatsApp + PDF ↗</button></div><p class="result-disclaimer" id="whatsapp-hint" role="status" hidden></p><p class="result-disclaimer">Hasil bersifat indikatif dan belum merupakan penawaran harga atau keputusan implementasi.</p></div>
     </section>
 
     <section class="section faq" id="faq"><div class="container faq-grid"><div><p class="eyebrow">Masih ingin mengecek?</p><h2>Jawaban sebelum mengambil langkah.</h2><p class="muted">Gunakan pertanyaan ini sebagai checklist evaluasi internal.</p></div><div class="faq-list"><details><summary>Apakah saya harus meeting sebelum melihat hasil?</summary><p>Tidak. Anda bisa menyelesaikan identifikasi dan simulasi lebih dulu. Data dicatat sebelum hasil dibuka agar tim Aseta dapat menindaklanjuti dengan konteks yang relevan.</p></details><details><summary>Apakah hasil kalkulator adalah harga penawaran?</summary><p>Bukan. Kalkulator memakai harga acuan dan menghasilkan kisaran untuk membantu menyusun scope awal. Harga, add-on, integrasi, dan implementasi perlu dikonfirmasi.</p></details><details><summary>Apa arti skor prioritas tindak lanjut?</summary><p>Skor merangkum urgensi, kompleksitas kebutuhan, dan target implementasi untuk membantu tim Aseta menentukan tindak lanjut yang relevan. Skor ini bukan penilaian terhadap perusahaan Anda.</p></details><details><summary>Apakah Aseta menggantikan ERP?</summary><p>Aseta berfokus pada asset lifecycle dan maintenance management. Integrasi dengan accounting/ERP dapat dievaluasi berdasarkan kebutuhan organisasi.</p></details></div></div></section>
@@ -306,6 +306,6 @@
     fitHeadings();
   })();
   </script>
-  <script src="aseta-self-serve.js?v=spacing1"></script>
+  <script src="aseta-self-serve.js?v=logic1"></script>
 </body>
 </html>

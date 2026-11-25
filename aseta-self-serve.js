@@ -17,6 +17,7 @@
   };
   const enterpriseFeatureLabels = {
     depreciation: 'Depresiasi aset otomatis',
+    'laporan-keuangan': 'Laporan aktivitas & depresiasi',
     maintenance: 'Maintenance & work order',
     'borrowing-disposal': 'Peminjaman & disposal/write-off',
     'cross-branch-approval': 'Approval & kontrol lintas cabang',
@@ -40,11 +41,16 @@
     const enterprise = features.map(() => 375000 * 12).reduce((sum, value) => sum + value, 0);
     const hardwareSelected = method === 'qr' ? $('#qr-hardware')?.checked : $('#rfid-hardware')?.checked;
     const tagPrice = Number($('#rfid-tag-type')?.value || 180000);
-    const hardware = hardwareSelected
-      ? method === 'rfid'
-        ? [19500000 + Math.ceil(range.min / 100) * tagPrice, 19500000 + Math.ceil(range.max / 100) * tagPrice]
-        : [8060000, 8060000]
-      : [0, 0];
+    const tagSelected = $('#rfid-tags')?.checked !== false;
+    let hardware;
+    if (method === 'rfid') {
+      const reader = hardwareSelected ? 19500000 : 0;
+      const tagLow = tagSelected ? Math.ceil(range.min / 100) * tagPrice : 0;
+      const tagHigh = tagSelected ? Math.ceil(range.max / 100) * tagPrice : 0;
+      hardware = [reader + tagLow, reader + tagHigh];
+    } else {
+      hardware = hardwareSelected ? [8060000, 8060000] : [0, 0];
+    }
     const low = subscriptions[0] + enterprise + hardware[0];
     const high = subscriptions[1] + enterprise + hardware[1];
     const downtime = Number($('#dt-range')?.value || 0);
@@ -230,8 +236,41 @@
     $('#rfid-hardware-choice').hidden = !isRfid;
     $('#rfid-tag-choice').hidden = !(isRfid && $('#rfid-hardware').checked);
   };
+  const bindHardwareMap = () => {
+    const card = document.querySelector('.cost-card.is-rfid');
+    if (!card) return;
+    const hiddenReader = $('#rfid-hardware');
+    const hiddenTagType = $('#rfid-tag-type');
+    const hiddenTags = $('#rfid-tags');
+    const sync = () => {
+      const reader = card.querySelector('[data-hw="reader"] input');
+      if (hiddenReader && reader) hiddenReader.checked = reader.checked;
+      const tags = [...card.querySelectorAll('[data-tag] input')];
+      const checkedTag = tags.find((t) => t.checked);
+      if (hiddenTags) hiddenTags.checked = !!checkedTag;
+      if (checkedTag && hiddenTagType) hiddenTagType.value = checkedTag.closest('[data-tag]').dataset.tag;
+    };
+    card.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+      cb.addEventListener('change', () => {
+        const label = cb.closest('[data-tag]');
+        if (label && cb.checked) {
+          card.querySelectorAll('[data-tag] input').forEach((other) => { if (other !== cb) other.checked = false; });
+        }
+        sync();
+        updateEstimate();
+      });
+    });
+    sync();
+  };
   $('#subscription-type').addEventListener('change', () => { syncHardwareOptions(); updateEstimate(); });
-  $('#rfid-hardware').addEventListener('change', syncHardwareOptions);
+  $('#rfid-hardware').addEventListener('change', () => { syncHardwareOptions(); updateEstimate(); });
+  $$('.feature-choice input').forEach((input) => {
+    input.addEventListener('change', () => {
+      const output = $('#enterprise-features-output');
+      if (output) output.textContent = `${selectedFeatures().length} fitur dipilih`;
+      updateEstimate();
+    });
+  });
   const leadForm = $('#simulator-lead-form');
   const leadError = $('#lead-error');
   const leadSubmit = $('#lead-submit');
@@ -724,5 +763,7 @@
   window.addEventListener('scroll', updateStep, { passive: true });
   window.addEventListener('resize', updateStep);
   updateStep();
-  bindMethodToggle();   syncHardwareOptions(); updateEstimate(); updateProfileSummary();
+  bindMethodToggle(); bindHardwareMap(); syncHardwareOptions(); updateEstimate(); updateProfileSummary();
+  const featureCount = $('#enterprise-features-output');
+  if (featureCount) featureCount.textContent = `${selectedFeatures().length} fitur dipilih`;
 })();
