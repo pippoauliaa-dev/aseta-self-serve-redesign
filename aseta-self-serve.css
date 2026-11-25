@@ -124,9 +124,9 @@
 .relevansi-card p{margin:0 0 6px;font-size:12px;line-height:1.5;color:var(--ink)}
 .relevansi-card p:last-child{margin-bottom:0}
 .relevansi-card b{color:#b42318}
-.cost-card{border:1px solid var(--line);border-radius:8px;background:var(--surface);margin-top:14px;padding:12px 14px}
+.cost-card{border:1px solid var(--line);border-radius:8px;background:var(--surface);margin-top:14px;padding:14px 16px}
 .cost-title{margin:0 0 10px;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.cost-block{padding:10px 0;border-top:1px dashed var(--line)}
+.cost-block{padding:12px 0;border-top:1px dashed var(--line)}
 .cost-label{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--ink);margin-bottom:6px}
 .cost-icon{flex:0 0 auto;width:20px;height:20px;border-radius:4px;background:#dbe7f3;color:#1c58b7;display:flex;align-items:center;justify-content:center;font-size:12px}
 .tier-select{width:100%;border:1px solid #cbd5e1;border-radius:7px;padding:9px 10px;background:#fff;color:var(--ink);font:inherit;font-size:12px;margin-bottom:6px}
@@ -139,8 +139,11 @@
 .radio-chip{display:flex;align-items:center;gap:6px;border:1px solid #cbd5e1;border-radius:8px;padding:8px 12px;cursor:pointer;background:#fff;font-size:12px;font-weight:600}
 .radio-chip.is-active{border-color:#1c58b7;background:var(--blue-soft);color:var(--blue)}
 .radio-chip input{accent-color:var(--blue);margin:0}
-.hw-options{display:grid;gap:8px;margin-top:8px}
-.hw-choice{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:#fff;cursor:pointer}
+.hw-options{display:grid;gap:10px;margin-top:10px}
+.hw-choice{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:8px;padding:11px 12px;background:#fff;cursor:pointer}
+.hw-info{flex:1;min-width:0}
+.hw-info b{line-height:1.35}
+.hw-info small{display:block;margin-top:2px;line-height:1.4}
 .hw-choice:has(input:checked){border-color:#80a9e6;background:var(--blue-soft)}
 .hw-choice input{accent-color:var(--blue);margin:0}
 .hw-info{flex:1}

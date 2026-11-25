@@ -39,17 +39,26 @@
     const method = $('#subscription-type')?.value || 'qr';
     const subscriptions = range.subscription[method].map((monthly) => monthly * 12);
     const enterprise = features.map(() => 375000 * 12).reduce((sum, value) => sum + value, 0);
-    const hardwareSelected = method === 'qr' ? $('#qr-hardware')?.checked : $('#rfid-hardware')?.checked;
-    const tagPrice = Number($('#rfid-tag-type')?.value || 180000);
-    const tagSelected = $('#rfid-tags')?.checked !== false;
+    const rfidCard = document.querySelector('.cost-card.is-rfid');
     let hardware;
     if (method === 'rfid') {
-      const reader = hardwareSelected ? 19500000 : 0;
-      const tagLow = tagSelected ? Math.ceil(range.min / 100) * tagPrice : 0;
-      const tagHigh = tagSelected ? Math.ceil(range.max / 100) * tagPrice : 0;
+      let reader = 0;
+      let tagUnitTotal = 0;
+      if (rfidCard) {
+        const readerInput = rfidCard.querySelector('[data-hw="reader"] input');
+        reader = readerInput && readerInput.checked ? 19500000 : 0;
+        rfidCard.querySelectorAll('[data-tag] input:checked').forEach((input) => {
+          tagUnitTotal += Number(input.closest('[data-tag]').dataset.tag);
+        });
+      } else {
+        reader = $('#rfid-hardware')?.checked ? 19500000 : 0;
+        if ($('#rfid-tags')?.checked !== false) tagUnitTotal = Number($('#rfid-tag-type')?.value || 180000);
+      }
+      const tagLow = tagUnitTotal ? Math.ceil(range.min / 100) * tagUnitTotal : 0;
+      const tagHigh = tagUnitTotal ? Math.ceil(range.max / 100) * tagUnitTotal : 0;
       hardware = [reader + tagLow, reader + tagHigh];
     } else {
-      hardware = hardwareSelected ? [8060000, 8060000] : [0, 0];
+      hardware = $('#qr-hardware')?.checked ? [8060000, 8060000] : [0, 0];
     }
     const low = subscriptions[0] + enterprise + hardware[0];
     const high = subscriptions[1] + enterprise + hardware[1];
@@ -245,17 +254,12 @@
     const sync = () => {
       const reader = card.querySelector('[data-hw="reader"] input');
       if (hiddenReader && reader) hiddenReader.checked = reader.checked;
-      const tags = [...card.querySelectorAll('[data-tag] input')];
-      const checkedTag = tags.find((t) => t.checked);
-      if (hiddenTags) hiddenTags.checked = !!checkedTag;
-      if (checkedTag && hiddenTagType) hiddenTagType.value = checkedTag.closest('[data-tag]').dataset.tag;
+      const checkedTags = [...card.querySelectorAll('[data-tag] input:checked')];
+      if (hiddenTags) hiddenTags.checked = checkedTags.length > 0;
+      if (checkedTags.length && hiddenTagType) hiddenTagType.value = checkedTags[0].closest('[data-tag]').dataset.tag;
     };
     card.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
       cb.addEventListener('change', () => {
-        const label = cb.closest('[data-tag]');
-        if (label && cb.checked) {
-          card.querySelectorAll('[data-tag] input').forEach((other) => { if (other !== cb) other.checked = false; });
-        }
         sync();
         updateEstimate();
       });
