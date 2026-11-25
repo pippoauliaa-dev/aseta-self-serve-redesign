@@ -206,6 +206,19 @@
   ['#asset-range', '#profile-system', '#profile-branches', '#implementation-target'].forEach((selector) => $(selector)?.addEventListener('change', updateProfileSummary));
   $$('.calc-panel input, .calc-panel select').forEach((input) => input.addEventListener('input', updateEstimate));
   $$('.calc-panel input, .calc-panel select').forEach((input) => input.addEventListener('change', updateEstimate));
+  const bindMethodToggle = () => {
+    const radios = document.querySelectorAll('input[name="method"]');
+    const sel = document.getElementById('subscription-type');
+    if (!radios.length) return;
+    radios.forEach((r) => {
+      r.addEventListener('change', () => {
+        if (sel) { sel.value = r.value; }
+        document.querySelectorAll('.radio-chip').forEach((c) => c.classList.toggle('is-active', c.querySelector('input')?.checked));
+        syncHardwareOptions();
+        updateEstimate();
+      });
+    });
+  };
   const syncHardwareOptions = () => {
     const isRfid = $('#subscription-type').value === 'rfid';
     $('#qr-hardware-choice').hidden = isRfid;
@@ -706,5 +719,5 @@
   window.addEventListener('scroll', updateStep, { passive: true });
   window.addEventListener('resize', updateStep);
   updateStep();
-  syncHardwareOptions(); updateEstimate(); updateProfileSummary();
+  bindMethodToggle();   syncHardwareOptions(); updateEstimate(); updateProfileSummary();
 })();
