@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="aseta-self-serve.css?v=panelv6e">
+  <link rel="stylesheet" href="aseta-self-serve.css?v=toggle1">
 </head>
 <body>
   <header class="site-header" id="top">
@@ -165,6 +165,7 @@
         <p class="eyebrow">Metode pencatatan</p>
         <h3>Pilih metode identifikasi aset</h3>
         <span class="method-label">Metode identifikasi</span>
+        <div class="method-toggle"><label class="radio-chip is-active"><input type="radio" name="method" value="qr" checked><span>QR Code</span></label><label class="radio-chip"><input type="radio" name="method" value="rfid"><span>RFID</span></label></div>
         <select><option value="qr" selected>QR Code</option><option value="rfid">RFID</option></select>
 
         <div class="cost-card">
@@ -280,6 +281,6 @@
     fitHeadings();
   })();
   </script>
-  <script src="aseta-self-serve.js?v=panelv6e"></script>
+  <script src="aseta-self-serve.js?v=toggle1"></script>
 </body>
 </html>
