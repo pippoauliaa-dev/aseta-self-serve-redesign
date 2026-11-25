@@ -207,16 +207,13 @@
   $$('.calc-panel input, .calc-panel select').forEach((input) => input.addEventListener('input', updateEstimate));
   $$('.calc-panel input, .calc-panel select').forEach((input) => input.addEventListener('change', updateEstimate));
   const bindMethodToggle = () => {
-    const radios = document.querySelectorAll('input[name="method"]');
     const sel = document.getElementById('subscription-type');
-    if (!radios.length) return;
-    radios.forEach((r) => {
-      r.addEventListener('change', () => {
-        if (sel) { sel.value = r.value; }
-        document.querySelectorAll('.radio-chip').forEach((c) => c.classList.toggle('is-active', c.querySelector('input')?.checked));
-        syncHardwareOptions();
-        updateEstimate();
-      });
+    const visible = document.getElementById('method-select');
+    if (!visible) return;
+    visible.addEventListener('change', () => {
+      if (sel) sel.value = visible.value;
+      syncHardwareOptions();
+      updateEstimate();
     });
   };
   const syncHardwareOptions = () => {
