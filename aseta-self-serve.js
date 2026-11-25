@@ -208,13 +208,19 @@
   $$('.calc-panel input, .calc-panel select').forEach((input) => input.addEventListener('change', updateEstimate));
   const bindMethodToggle = () => {
     const sel = document.getElementById('subscription-type');
-    const visible = document.getElementById('method-select');
-    if (!visible) return;
-    visible.addEventListener('change', () => {
-      if (sel) sel.value = visible.value;
-      syncHardwareOptions();
-      updateEstimate();
-    });
+    const radios = document.querySelectorAll('input[name="method"]');
+    ;
+
+    if (radios.length) {
+      radios.forEach((r) => {
+        r.addEventListener('change', () => {
+          if (sel) sel.value = r.value;
+          document.querySelectorAll('.radio-chip').forEach((c) => c.classList.toggle('is-active', c.querySelector('input')?.checked));
+          syncHardwareOptions();
+          updateEstimate();
+        });
+      });
+    }
   };
   const syncHardwareOptions = () => {
     const isRfid = $('#subscription-type').value === 'rfid';
