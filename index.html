@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="aseta-self-serve.css?v=methodradio2">
+  <link rel="stylesheet" href="aseta-self-serve.css?v=rfidtoggle">
 </head>
 <body>
   <header class="site-header" id="top">
@@ -167,7 +167,33 @@
         <span class="method-label">Metode identifikasi</span>
         <div class="method-toggle"><label class="radio-chip is-active"><input type="radio" name="method" value="qr" checked><span>QR Code</span></label><label class="radio-chip"><input type="radio" name="method" value="rfid"><span>RFID</span></label></div>
 
-        <div class="cost-card">
+        <div class="cost-card is-rfid" style="display:none">
+          <p class="cost-title">Biaya Berlangganan Software</p>
+          <div class="cost-block">
+            <div class="cost-label"><span class="cost-icon">📄</span> Berlangganan</div>
+            <select class="tier-select">
+              <option value="under-50" selected>&lt; 500 aset · Rp750.000 / bulan</option>
+              <option value="50-199" disabled>&lt; 1.000 aset · Rp1.200.000 / bulan</option>
+              <option value="200-499" disabled>&lt; 2.000 aset · Rp2.400.000 / bulan</option>
+            </select>
+            <ul class="tier-notes">
+              <li>Harga berlaku untuk berlangganan minimal 12 bulan.</li>
+              <li>Jumlah aset mengikuti rentang aset di langkah1.</li>
+            </ul>
+          </div>
+          <div class="cost-block">
+            <div class="cost-label"><span class="cost-icon">📦</span> Paket hardware &amp; consumables RFID</div>
+            <div class="hw-options">
+              <label class="hw-choice"><input type="checkbox" checked><div class="hw-info"><b>RFID Handheld Integrated Reader</b><small>Unit utama</small></div><div class="hw-price-txt">Rp19.500.000</div></label>
+              <label class="hw-choice"><input type="checkbox" checked><div class="hw-info"><b>RFID UHF Label Sticker Tag</b><small>Rp180.000 / 100 pcs</small></div><div class="hw-price-txt">Rp180.000</div></label>
+              <label class="hw-choice"><input type="checkbox"><div class="hw-info"><b>RFID UHF On Metal Sticker Tag</b><small>Rp850.000 / 100 pcs</small></div><div class="hw-price-txt">Rp850.000</div></label>
+              <label class="hw-choice"><input type="checkbox"><div class="hw-info"><b>RFID UHF On Metal ABS Tag</b><small>Rp2.400.000 / 100 pcs</small></div><div class="hw-price-txt">Rp2.400.000</div></label>
+            </div>
+            <p class="hw-footnote">Harga dapat berubah sewaktu-waktu.</p>
+          </div>
+        </div>
+
+        <div class="cost-card" id="card-qr">
           <p class="cost-title">Biaya berlangganan software dan paket hardware &amp; consumables QR Code</p>
 
           <div class="cost-block">
@@ -280,6 +306,6 @@
     fitHeadings();
   })();
   </script>
-  <script src="aseta-self-serve.js?v=methodradio2"></script>
+  <script src="aseta-self-serve.js?v=rfidtoggle"></script>
 </body>
 </html>

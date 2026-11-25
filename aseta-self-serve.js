@@ -208,19 +208,21 @@
   $$('.calc-panel input, .calc-panel select').forEach((input) => input.addEventListener('change', updateEstimate));
   const bindMethodToggle = () => {
     const sel = document.getElementById('subscription-type');
+    const qrCard = document.getElementById('card-qr');
+    const rfidCard = document.querySelector('.cost-card.is-rfid');
     const radios = document.querySelectorAll('input[name="method"]');
-    ;
-
-    if (radios.length) {
-      radios.forEach((r) => {
-        r.addEventListener('change', () => {
-          if (sel) sel.value = r.value;
-          document.querySelectorAll('.radio-chip').forEach((c) => c.classList.toggle('is-active', c.querySelector('input')?.checked));
-          syncHardwareOptions();
-          updateEstimate();
-        });
+    if (!radios.length) return;
+    radios.forEach((r) => {
+      r.addEventListener('change', () => {
+        const v = r.value;
+        if (sel) sel.value = v;
+        if (qrCard) qrCard.style.display = v === 'qr' ? 'block' : 'none';
+        if (rfidCard) rfidCard.style.display = v === 'rfid' ? 'block' : 'none';
+        document.querySelectorAll('.radio-chip').forEach((c) => c.classList.toggle('is-active', c.querySelector('input')?.checked));
+        syncHardwareOptions();
+        updateEstimate();
       });
-    }
+    });
   };
   const syncHardwareOptions = () => {
     const isRfid = $('#subscription-type').value === 'rfid';
